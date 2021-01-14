@@ -1,22 +1,23 @@
 <template>
   <div>
-    <ul>
-      <button @click="cardSuit = Suit.Clubs">Clubs</button>
-      <button @click="cardSuit = Suit.Diamonds">Diamonds</button>
-      <button @click="cardSuit = Suit.Hearts">Hearts</button>
-      <button @click="cardSuit = Suit.Spades">Spades</button>
-    </ul>
-    <ul>
-      <button @click="cardRank = Rank.Six">6</button>
-      <button @click="cardRank = Rank.Seven">7</button>
-      <button @click="cardRank = Rank.Eight">8</button>
-      <button @click="cardRank = Rank.Nine">9</button>
-      <button @click="cardRank = Rank.Ten">10</button>
-      <button @click="cardRank = Rank.Jack">Jack</button>
-      <button @click="cardRank = Rank.Queen">Queen</button>
-      <button @click="cardRank = Rank.King">King</button>
-      <button @click="cardRank = Rank.Ace">Ace</button>
-    </ul>
+    <div>
+      <button
+        v-for="suit in Object.values(Suit)"
+        :key="suit"
+        @click="cardSuit = suit"
+      >
+        {{suitSymbol(suit)}}
+      </button>
+    </div>
+    <div>
+      <button
+        v-for="rank in Object.values(Rank).filter(r => ((typeof r) === 'number'))"
+        :key="rank"
+        @click="cardRank = rank"
+      >
+        {{rankTitle(rank)}}
+      </button>
+    </div>
     <card :suit="cardSuit" :rank="cardRank"/>
   </div>
 </template>
@@ -24,7 +25,7 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 
-import { Suit, Rank } from '@/enums';
+import { Suit, Rank, suitSymbol, rankTitle } from '@/enums';
 
 import Card from '@/components/Card.vue';
 
@@ -37,7 +38,11 @@ export default class Game extends Vue {
 
   readonly Suit = Suit;
 
+  readonly suitSymbol = suitSymbol;
+
   readonly Rank = Rank;
+
+  readonly rankTitle = rankTitle;
 
   cardSuit = Suit.Clubs;
 
