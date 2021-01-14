@@ -2,7 +2,7 @@
   <div>
     <div>
       <button
-        v-for="suit in Object.values(Suit)"
+        v-for="suit in suits"
         :key="suit"
         @click="cardSuit = suit"
       >
@@ -11,7 +11,7 @@
     </div>
     <div>
       <button
-        v-for="rank in Object.values(Rank).filter(r => ((typeof r) === 'number'))"
+        v-for="rank in ranks"
         :key="rank"
         @click="cardRank = rank"
       >
@@ -25,7 +25,7 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 
-import { Suit, Rank, suitSymbol, rankTitle } from '@/enums';
+import { Suit, suits, suitSymbol, Rank, ranks, rankTitle } from '@/enums';
 
 import Card from '@/components/Card.vue';
 
@@ -38,9 +38,13 @@ export default class Game extends Vue {
 
   readonly Suit = Suit;
 
+  readonly suits = suits;
+
   readonly suitSymbol = suitSymbol;
 
   readonly Rank = Rank;
+
+  readonly ranks = ranks;
 
   readonly rankTitle = rankTitle;
 

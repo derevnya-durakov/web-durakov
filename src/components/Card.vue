@@ -1,20 +1,18 @@
 <template>
-  <img
-    :width="width"
-    :height="height"
-    :src="`/img/cards/${face}`"
-    :alt="face"
-  >
+  <div>
+    <img
+      :width="width"
+      :height="height"
+      :src="`/img/cards/${face}`"
+      :alt="face"
+    >
+  </div>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 
-import { Suit, Rank } from '@/enums';
-
-const suits = Object.values(Suit);
-
-const ranks = Object.values(Rank);
+import { Suit, Rank, suits, ranks } from '@/enums';
 
 @Options({
   props: {
@@ -30,11 +28,11 @@ const ranks = Object.values(Rank);
     },
     width: {
       type: Number,
-      default: '250',
+      default: 250,
     },
     height: {
       type: Number,
-      default: '350',
+      default: 350,
     },
   },
 })

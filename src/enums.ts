@@ -5,6 +5,8 @@ export enum Suit {
   Spades = 'Spades',
 }
 
+export const suits = Object.values(Suit);
+
 export function suitSymbol(suit: Suit): '♣' | '♦' | '♥' | '♠' {
   switch (suit) {
     case Suit.Clubs: return '♣';
@@ -13,6 +15,8 @@ export function suitSymbol(suit: Suit): '♣' | '♦' | '♥' | '♠' {
     case Suit.Spades: return '♠';
   }
 }
+
+//
 
 export enum Rank {
   Six,
@@ -25,6 +29,8 @@ export enum Rank {
   King,
   Ace,
 }
+
+export const ranks = Object.values(Rank).filter(r => ((typeof r) === 'number'));
 
 export function rankTitle(rank: Rank): '6' | '7' | '8' | '9' | '10' | 'J' | 'Q' | 'K' | 'A' {
   switch (rank) {
