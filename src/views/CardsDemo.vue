@@ -18,7 +18,7 @@
         {{rankTitle(rank)}}
       </button>
     </div>
-    <card :suit="cardSuit" :rank="cardRank"/>
+    <card :model="cardModel"/>
   </div>
 </template>
 
@@ -26,6 +26,7 @@
 import { Options, Vue } from 'vue-class-component';
 
 import { Suit, suits, suitSymbol, Rank, ranks, rankTitle } from '@/enums';
+import CardModel from '@/models/Card';
 
 import Card from '@/components/Card.vue';
 
@@ -48,9 +49,16 @@ export default class Game extends Vue {
 
   readonly rankTitle = rankTitle;
 
-  cardSuit = Suit.Clubs;
+  cardSuit: Suit | null = null;
 
-  cardRank = Rank.Six;
+  cardRank: Rank | null = null;
+
+  get cardModel(): CardModel | null {
+    if ((this.cardSuit === null) || (this.cardRank === null)) {
+      return null;
+    }
+    return new CardModel(this.cardSuit, this.cardRank);
+  }
 
 }
 </script>

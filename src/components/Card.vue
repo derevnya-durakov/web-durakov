@@ -12,19 +12,14 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 
-import { Suit, Rank, suits, ranks } from '@/enums';
+import { Suit, Rank } from '@/enums';
+import CardModel from '@/models/Card';
 
 @Options({
   props: {
-    suit: {
-      type: String,
-      required: true,
-      validator: (suit: Suit) => (suits.indexOf(suit) !== -1),
-    },
-    rank: {
-      type: Number,
-      required: true,
-      validator: (rank: number) => (ranks.indexOf(rank) !== -1),
+    model: {
+      type: Object,
+      default: null,
     },
     width: {
       type: Number,
@@ -42,16 +37,14 @@ export default class Card extends Vue {
 
   readonly Rank = Rank;
 
-  suit!: string;
-
-  rank!: number;
+  model!: CardModel | null;
 
   width!: number;
 
   height!: number;
 
   get face(): string {
-    return `${this.suit}${this.Rank[this.rank]}.svg`;
+    return (this.model) ? `${this.model.suit}${this.Rank[this.model.rank]}.svg` : 'CardBack.svg';
   }
 
 }
