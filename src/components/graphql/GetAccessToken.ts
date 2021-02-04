@@ -23,6 +23,7 @@ const GetAccessToken = defineComponent({
         }
       `,
       props,
+      { fetchPolicy: 'no-cache' },
     );
     const _accessToken = useResult(result);
     watch(_accessToken, () => {

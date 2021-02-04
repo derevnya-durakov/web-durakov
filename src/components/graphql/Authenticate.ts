@@ -32,6 +32,7 @@ const Authenticate = defineComponent({
         }
       `,
       props,
+      { fetchPolicy: 'no-cache' },
     );
     const _player = useResult(result, null, data => data.auth.player);
     watch(_player, () => {
