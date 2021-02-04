@@ -12,7 +12,10 @@ const Authenticate = defineComponent({
   emits: [ EVENT_AUTHENTICATED ],
 
   props: {
-    accessToken: String,
+    accessToken: {
+      type: String,
+      required: true,
+    },
   },
 
   setup(props, { emit }) {
@@ -37,7 +40,7 @@ const Authenticate = defineComponent({
     });
   },
 
-  render: () => [],
+  render: () => null,
 
 });
 

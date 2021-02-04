@@ -23,42 +23,39 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import { computed, defineComponent, ref } from 'vue';
 
 import { Suit, suits, suitSymbol, Rank, ranks, rankTitle } from '@/enums';
 import CardModel from '@/models/Card';
 
 import Card from '@/components/Card.vue';
 
-@Options({
+const CardsDemo = defineComponent({
+
   components: {
     Card,
   },
-})
-export default class Game extends Vue {
 
-  readonly Suit = Suit;
+  setup() {
+    const cardSuit = ref<Suit | null>(null);
+    const cardRank = ref<Rank | null>(null);
+    return {
+      cardSuit,
+      cardRank,
+      cardModel: computed((): CardModel | null => {
+        if ((cardSuit.value === null) || (cardRank.value === null)) {
+          return null;
+        }
+        return new CardModel(cardSuit.value, cardRank.value);
+      }),
+      suits,
+      suitSymbol,
+      ranks,
+      rankTitle,
+    };
+  },
 
-  readonly suits = suits;
+});
 
-  readonly suitSymbol = suitSymbol;
-
-  readonly Rank = Rank;
-
-  readonly ranks = ranks;
-
-  readonly rankTitle = rankTitle;
-
-  cardSuit: Suit | null = null;
-
-  cardRank: Rank | null = null;
-
-  get cardModel(): CardModel | null {
-    if ((this.cardSuit === null) || (this.cardRank === null)) {
-      return null;
-    }
-    return new CardModel(this.cardSuit, this.cardRank);
-  }
-
-}
+export default CardsDemo;
 </script>

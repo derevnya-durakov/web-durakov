@@ -10,12 +10,12 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import { computed, defineComponent, toRefs } from 'vue';
 
-import { Suit, Rank } from '@/enums';
-import CardModel from '@/models/Card';
+import { Rank } from '@/enums';
 
-@Options({
+const Card = defineComponent({
+
   props: {
     model: {
       type: Object,
@@ -30,22 +30,18 @@ import CardModel from '@/models/Card';
       default: 350,
     },
   },
-})
-export default class Card extends Vue {
 
-  readonly Suit = Suit;
+  setup(props) {
+    const { model } = toRefs(props);
+    return {
+      face: computed((): string => ((model && model.value)
+        ? `${model.value.suit}${Rank[model.value.rank]}.svg`
+        : 'CardBack.svg'
+      )),
+    };
+  },
 
-  readonly Rank = Rank;
+});
 
-  model!: CardModel | null;
-
-  width!: number;
-
-  height!: number;
-
-  get face(): string {
-    return (this.model) ? `${this.model.suit}${this.Rank[this.model.rank]}.svg` : 'CardBack.svg';
-  }
-
-}
+export default Card;
 </script>

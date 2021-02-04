@@ -10,6 +10,7 @@ const GetAccessToken = defineComponent({
   props: {
     nickname: {
       type: String,
+      required: true,
     },
   },
 
@@ -29,7 +30,7 @@ const GetAccessToken = defineComponent({
     });
   },
 
-  render: () => [],
+  render: () => null,
 
 });
 
