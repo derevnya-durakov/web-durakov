@@ -34,9 +34,10 @@ const Card = defineComponent({
   setup(props) {
     const { model } = toRefs(props);
     return {
-      face: computed((): string => ((model && model.value)
-        ? `${model.value.suit}${Rank[model.value.rank]}.svg`
-        : 'CardBack.svg'
+      face: computed((): string => (
+        model.value
+          ? `${model.value.suit}${Rank[model.value.rank]}.svg`
+          : 'CardBack.svg'
       )),
     };
   },
