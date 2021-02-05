@@ -4,6 +4,7 @@
     <router-link v-if="!isCurrentRoute('login') && !loggedIn" to="/login">Login</router-link>
     <button v-if="loggedIn" @click="logout">Logout</button>
   </nav>
+  <graphql-subscribe-players-updated/>
   <router-view/>
 </template>
 
@@ -12,9 +13,14 @@ import { computed, defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
+import GraphqlSubscribePlayersUpdated from '@/components/graphql/SubscribePlayersUpdated';
 import { LOGOUT } from '@/store/action-types';
 
 const App = defineComponent({
+
+  components: {
+    GraphqlSubscribePlayersUpdated,
+  },
 
   setup() {
     const _router = useRouter();
