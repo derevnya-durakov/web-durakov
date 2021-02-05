@@ -8,7 +8,7 @@
   <graphql-authenticate
     v-if="store.state.accessToken"
     :access-token="store.state.accessToken"
-    @authenticated="router.push({ name: 'game' })"
+    @authenticated="navigateToGame"
   />
 </template>
 
@@ -28,9 +28,12 @@ const Login = defineComponent({
   },
 
   setup() {
+    const _router = useRouter();
     return {
-      router: useRouter(),
       store: useStore(),
+      navigateToGame() {
+        _router.push({ name: 'game' });
+      },
     };
   },
 
@@ -49,8 +52,8 @@ const Login = defineComponent({
   },
 
   created() {
-    if (this.store.state.loggedInUser) {
-      this.router.push({ name: 'game' });
+    if (this.store.getters.loggedIn) {
+      this.navigateToGame();
     }
   },
 

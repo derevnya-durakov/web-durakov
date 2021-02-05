@@ -21,7 +21,7 @@ const Game = defineComponent({
   },
 
   created() {
-    if (this.store.state.accessToken === null) {
+    if (!this.store.getters.loggedIn) {
       this.router.push({ name: 'login' });
     } else {
       console.log('authenticated');

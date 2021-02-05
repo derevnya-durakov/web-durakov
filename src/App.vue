@@ -1,17 +1,7 @@
 <template>
   <nav>
-    <button
-      v-if="!isCurrentRoute('demo')"
-      @click="navigate('demo')"
-    >
-      Demo
-    </button>
-    <button
-      v-if="!isCurrentRoute('login') && !loggedIn"
-      @click="navigate('login')"
-    >
-      Login
-    </button>
+    <router-link v-if="!isCurrentRoute('demo')" to="/demo">Demo</router-link>
+    <router-link v-if="!isCurrentRoute('login') && !loggedIn" to="/login">Login</router-link>
     <button v-if="loggedIn" @click="logout">Logout</button>
   </nav>
   <router-view/>
@@ -37,9 +27,6 @@ const App = defineComponent({
       },
       isCurrentRoute(routeName: string): boolean {
         return (_router.currentRoute.value.name === routeName);
-      },
-      navigate(routeName: string): void {
-        _router.push({ name: routeName });
       },
     };
   },
