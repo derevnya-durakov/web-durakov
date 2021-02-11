@@ -14,7 +14,9 @@ import { computed, defineComponent, toRefs } from 'vue';
 
 import { Rank } from '@/enums';
 
-const Card = defineComponent({
+export default defineComponent({
+
+  name: 'Card',
 
   props: {
     model: {
@@ -34,7 +36,7 @@ const Card = defineComponent({
   setup(props) {
     const { model } = toRefs(props);
     return {
-      face: computed((): string => (
+      face: computed(() => (
         model.value
           ? `${model.value.suit}${Rank[model.value.rank]}.svg`
           : 'CardBack.svg'
@@ -43,6 +45,4 @@ const Card = defineComponent({
   },
 
 });
-
-export default Card;
 </script>

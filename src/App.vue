@@ -1,10 +1,11 @@
 <template>
   <nav>
-    <router-link v-if="!isCurrentRoute('demo')" to="/demo">Demo</router-link>
-    <router-link v-if="!isCurrentRoute('login') && !loggedIn" to="/login">Login</router-link>
+    <router-link v-if="!isCurrentRoute('demo')" to="/demo">&lt;Demo&gt;</router-link>
+    <router-link v-if="!isCurrentRoute('game')" to="/game">&lt;Game&gt;</router-link>
+    <router-link v-if="!isCurrentRoute('users')" to="/users">&lt;Users&gt;</router-link>
+    <router-link v-if="!isCurrentRoute('login') && !loggedIn" to="/login">&lt;Login&gt;</router-link>
     <button v-if="loggedIn" @click="logout">Logout</button>
   </nav>
-  <graphql-subscribe-players-updated/>
   <router-view/>
 </template>
 
@@ -13,33 +14,29 @@ import { computed, defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
-import GraphqlSubscribePlayersUpdated from '@/components/graphql/SubscribePlayersUpdated';
 import { LOGOUT } from '@/store/action-types';
+import State from '@/store/State';
 
-const App = defineComponent({
+export default defineComponent({
 
-  components: {
-    GraphqlSubscribePlayersUpdated,
-  },
+  name: 'App',
 
   setup() {
     const _router = useRouter();
-    const _store = useStore();
+    const _store = useStore<State>();
     return {
       loggedIn: computed((): boolean => _store.getters.loggedIn),
       logout() {
-        _store.dispatch(LOGOUT);
-        _router.push({ name: 'login' });
+        _store.dispatch(LOGOUT)
+          .then(() => {
+            _router.push({ name: 'login' });
+          });
       },
-      isCurrentRoute(routeName: string): boolean {
-        return (_router.currentRoute.value.name === routeName);
-      },
+      isCurrentRoute: (routeName: string) => (_router.currentRoute.value.name === routeName),
     };
   },
 
 });
-
-export default App;
 </script>
 
 <style lang="scss">

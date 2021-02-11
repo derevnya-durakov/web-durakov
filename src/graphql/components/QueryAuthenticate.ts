@@ -4,26 +4,22 @@ import { useQuery, useResult } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
 
 import { SET_LOGGED_IN_USER } from '@/store/mutation-types';
+import State from '@/store/State';
 
 const EVENT_AUTHENTICATED = 'authenticated';
 
-const Authenticate = defineComponent({
+export default defineComponent({
+
+  name: 'QueryAuthenticate',
 
   emits: [ EVENT_AUTHENTICATED ],
 
-  props: {
-    accessToken: {
-      type: String,
-      required: true,
-    },
-  },
-
-  setup(props, { emit }) {
-    const _store = useStore();
+  setup(_props, { emit }) {
+    const _store = useStore<State>();
     const { result } = useQuery(
       gql`
-        query authenticate($accessToken: String!) {
-          auth(accessToken: $accessToken) {
+        query authenticate {
+          auth {
             player {
               id
               nickname
@@ -31,12 +27,17 @@ const Authenticate = defineComponent({
           }
         }
       `,
-      props,
-      { fetchPolicy: 'no-cache' },
+      null,
+      {
+        fetchPolicy: 'no-cache',
+        context: {
+          headers: { 'X-Auth-Token': _store.state.accessToken },
+        },
+      },
     );
     const _player = useResult(result, null, data => data.auth.player);
-    watch(_player, () => {
-      _store.commit(SET_LOGGED_IN_USER, _player.value);
+    watch(_player, value => {
+      _store.commit(SET_LOGGED_IN_USER, value);
       emit(EVENT_AUTHENTICATED);
     });
   },
@@ -44,5 +45,3 @@ const Authenticate = defineComponent({
   render: () => null,
 
 });
-
-export default Authenticate;
