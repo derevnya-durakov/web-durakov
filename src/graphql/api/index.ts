@@ -4,6 +4,12 @@ import { Store } from 'vuex';
 
 import State from '@/store/State';
 
+export function getContext(headerXAuthToken: string | null) {
+  return {
+    headers: { 'X-Auth-Token': headerXAuthToken || '' },
+  };
+}
+
 export function useAddPlayerMutation(store: Store<State>) {
   const { mutate: addPlayer } = useMutation(
     gql`
@@ -14,11 +20,7 @@ export function useAddPlayerMutation(store: Store<State>) {
         }
       }
     `,
-    {
-      context: {
-        headers: { 'X-Auth-Token': store.state.accessToken },
-      },
-    },
+    { context: getContext(store.state.accessToken) },
   );
   return { addPlayer };
 }

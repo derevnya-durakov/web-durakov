@@ -1,8 +1,9 @@
-import { defineComponent, watch } from 'vue';
-import { useStore } from 'vuex';
 import { useQuery, useResult } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
+import { defineComponent, watch } from 'vue';
+import { useStore } from 'vuex';
 
+import { getContext } from '@/graphql/api';
 import { SET_PLAYERS } from '@/store/mutation-types';
 import State from '@/store/State';
 
@@ -24,9 +25,7 @@ export default defineComponent({
       null,
       {
         fetchPolicy: 'no-cache',
-        context: {
-          headers: { 'X-Auth-Token': _store.state.accessToken },
-        },
+        context: getContext(_store.state.accessToken),
       },
     );
     const _players = useResult(result);

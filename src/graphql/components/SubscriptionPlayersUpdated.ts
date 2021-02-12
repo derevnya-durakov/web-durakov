@@ -1,8 +1,9 @@
 import { useSubscription } from '@vue/apollo-composable';
+import gql from 'graphql-tag';
 import { defineComponent, watch } from 'vue';
 import { useStore } from 'vuex';
-import gql from 'graphql-tag';
 
+import { getContext } from '@/graphql/api';
 import { ADD_PLAYER } from '@/store/mutation-types';
 import State from '@/store/State';
 
@@ -23,13 +24,7 @@ export default defineComponent({
         }
       }`,
       null,
-      {
-        context: {
-          headers: {
-            'X-Auth-Token': _store.state.accessToken,
-          },
-        },
-      },
+      { context: getContext(_store.state.accessToken) },
     );
     watch(
       result,
