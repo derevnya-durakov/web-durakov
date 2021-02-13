@@ -18,7 +18,14 @@
         {{rankTitle(rank)}}
       </button>
     </div>
-    <card :model="cardModel"/>
+    <flip style="margin: 0 auto;" :flipped="cardFlipped">
+      <template v-slot:front>
+        <card :model="cardModel" @click="flipBack"/>
+      </template>
+      <template v-slot:back>
+        <card/>
+      </template>
+    </flip>
   </div>
 </template>
 
@@ -29,25 +36,38 @@ import { Suit, suits, suitSymbol, Rank, ranks, rankTitle } from '@/enums';
 import CardModel from '@/models/Card';
 
 import Card from '@/components/Card.vue';
+import Flip from '@/components/Flip.vue';
 
-const CardsDemo = defineComponent({
+export default defineComponent({
+
+  name: 'CardsDemo',
 
   components: {
     Card,
+    Flip,
   },
 
   setup() {
     const cardSuit = ref<Suit | null>(null);
     const cardRank = ref<Rank | null>(null);
+    const cardModel = computed((): CardModel | null => (
+      ((cardSuit.value !== null) && (cardRank.value !== null))
+        ? new CardModel(cardSuit.value, cardRank.value)
+        : null
+    ));
     return {
       cardSuit,
       cardRank,
-      cardModel: computed((): CardModel | null => {
-        if ((cardSuit.value === null) || (cardRank.value === null)) {
-          return null;
-        }
-        return new CardModel(cardSuit.value, cardRank.value);
+      cardModel,
+      cardFlipped: computed(() => {
+        return (cardModel.value !== null);
       }),
+      flipBack() {
+        if (cardModel.value !== null) {
+          cardSuit.value = null;
+          cardRank.value = null;
+        }
+      },
       suits,
       suitSymbol,
       ranks,
@@ -56,6 +76,4 @@ const CardsDemo = defineComponent({
   },
 
 });
-
-export default CardsDemo;
 </script>
