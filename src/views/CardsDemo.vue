@@ -4,6 +4,8 @@
       <button
         v-for="suit in suits"
         :key="suit"
+        :disabled="isSuitSelected(suit)"
+        :class="{ selected: isSuitSelected(suit) }"
         @click="setSuit(suit)"
       >
         {{suitSymbol(suit)}}
@@ -13,6 +15,8 @@
       <button
         v-for="rank in ranks"
         :key="rank"
+        :disabled="isRankSelected(rank)"
+        :class="{ selected: isRankSelected(rank) }"
         @click="setRank(rank)"
       >
         {{rankTitle(rank)}}
@@ -63,16 +67,38 @@ export default defineComponent({
         : null
     ));
     const cardFlippedToFront = ref(frontCardModel.value !== null);
+    const _selectedRank = computed(() => (cardFlippedToFront.value ? _frontCardRank.value : _backCardRank.value));
+    const _selectedSuit = computed(() => (cardFlippedToFront.value ? _frontCardSuit.value : _backCardSuit.value));
     function _flip() {
       cardFlippedToFront.value = !cardFlippedToFront.value;
     }
-    function _setNull(cardSuitRef: Ref<Suit | null>, cardRankRef: Ref<Rank | null>) {
+    function _doFlipAndCancel(
+      cardModelRef: Ref<CardModel | null>,
+      cardSuitRef: Ref<Suit | null>,
+      cardRankRef: Ref<Rank | null>,
+    ) {
+      if (cardModelRef.value !== null) {
+        _flip();
+      }
       cardSuitRef.value = null;
       cardRankRef.value = null;
     }
-    function _flipAndSetNull(cardSuitRef: Ref<Suit | null>, cardRankRef: Ref<Rank | null>) {
-      _flip();
-      _setNull(cardSuitRef, cardRankRef);
+    function _setCardAttribute<CAT1, CAT2>(
+      targetCardModelRef: Ref<CardModel | null>,
+      targetCardAttribute1Ref: Ref<CAT1 | null>,
+      targetCardAttribute2Ref: Ref<CAT2 | null>,
+      flipCardAttribute1Ref: Ref<CAT1 | null>,
+      flipCardAttribute2Ref: Ref<CAT2 | null>,
+      attributeValue: CAT1,
+    ) {
+      targetCardAttribute1Ref.value = attributeValue;
+      if (targetCardModelRef.value !== null) {
+        flipCardAttribute1Ref.value = targetCardAttribute1Ref.value;
+        flipCardAttribute2Ref.value = targetCardAttribute2Ref.value;
+        targetCardAttribute1Ref.value = null;
+        targetCardAttribute2Ref.value = null;
+        _flip();
+      }
     }
     return {
       frontCardModel,
@@ -80,53 +106,25 @@ export default defineComponent({
       cardFlippedToFront,
       flipBack() {
         if (cardFlippedToFront.value) {
-          if (frontCardModel.value !== null) {
-            _flip();
-          }
-          _setNull(_backCardSuit, _backCardRank);
+          _doFlipAndCancel(frontCardModel, _frontCardSuit, _frontCardRank);
         } else {
-          if (backCardModel.value !== null) {
-            _flip();
-          }
-          _setNull(_frontCardSuit, _frontCardRank);
+          _doFlipAndCancel(backCardModel, _backCardSuit, _backCardRank);
         }
       },
+      isRankSelected: (rank: Rank) => ((_selectedRank.value !== null) && (_selectedRank.value === rank)),
+      isSuitSelected: (suit: Suit) => ((_selectedSuit.value !== null) && (_selectedSuit.value === suit)),
       setRank(rank: Rank) {
         if (cardFlippedToFront.value) {
-          _backCardRank.value = rank;
-          if (_frontCardSuit.value !== null) {
-            _backCardSuit.value = _frontCardSuit.value;
-          }
-          if (_backCardSuit.value !== null) {
-            _flipAndSetNull(_frontCardSuit, _frontCardRank);
-          }
+          _setCardAttribute<Rank, Suit>(frontCardModel, _frontCardRank, _frontCardSuit, _backCardRank, _backCardSuit, rank);
         } else {
-          _frontCardRank.value = rank;
-          if (_backCardSuit.value !== null) {
-            _frontCardSuit.value = _backCardSuit.value;
-          }
-          if (_frontCardSuit.value !== null) {
-            _flipAndSetNull(_backCardSuit, _backCardRank);
-          }
+          _setCardAttribute<Rank, Suit>(backCardModel, _backCardRank, _backCardSuit, _frontCardRank, _frontCardSuit, rank);
         }
       },
       setSuit(suit: Suit) {
         if (cardFlippedToFront.value) {
-          _backCardSuit.value = suit;
-          if (_frontCardRank.value !== null) {
-            _backCardRank.value = _frontCardRank.value;
-          }
-          if (_backCardRank.value !== null) {
-            _flipAndSetNull(_frontCardSuit, _frontCardRank);
-          }
+          _setCardAttribute<Suit, Rank>(frontCardModel, _frontCardSuit, _frontCardRank, _backCardSuit, _backCardRank, suit);
         } else {
-          _frontCardSuit.value = suit;
-          if (_backCardRank.value !== null) {
-            _frontCardRank.value = _backCardRank.value;
-          }
-          if (_frontCardRank.value !== null) {
-            _flipAndSetNull(_backCardSuit, _backCardRank);
-          }
+          _setCardAttribute<Suit, Rank>(backCardModel, _backCardSuit, _backCardRank, _frontCardSuit, _frontCardRank, suit);
         }
       },
       suits,
@@ -138,3 +136,20 @@ export default defineComponent({
 
 });
 </script>
+
+<style lang="scss" scoped>
+button {
+  background-color: #99ddff;
+  border: none;
+  color: #4d4d4d;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  &.selected {
+    background-color: #e6e6e6;
+    color: #999999;
+  }
+}
+</style>
