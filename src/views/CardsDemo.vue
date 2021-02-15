@@ -5,7 +5,6 @@
         v-for="suit in suits"
         :key="suit"
         :disabled="isSuitSelected(suit)"
-        :class="{ selected: isSuitSelected(suit) }"
         @click="setSuit(suit)"
       >
         {{suitSymbol(suit)}}
@@ -16,7 +15,6 @@
         v-for="rank in ranks"
         :key="rank"
         :disabled="isRankSelected(rank)"
-        :class="{ selected: isRankSelected(rank) }"
         @click="setRank(rank)"
       >
         {{rankTitle(rank)}}
@@ -30,17 +28,25 @@
         <card :model="backCardModel" @click="flipBack"/>
       </template>
     </flip>
+    <button
+      :disabled="cardFlippedToFront ? (frontCardModel === null) : (backCardModel === null)"
+      @click="addCardToHand"
+    >
+      add to hand
+    </button>
+    <hand-dock :cards="hand"/>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, Ref, ref } from 'vue';
-
-import { Suit, suits, suitSymbol, Rank, ranks, rankTitle } from '@/enums';
-import CardModel from '@/models/Card';
+import { defineComponent } from 'vue';
 
 import Card from '@/components/Card.vue';
 import Flip from '@/components/Flip.vue';
+import HandDock from '@/components/HandDock.vue';
+import { suits, suitSymbol, ranks, rankTitle } from '@/enums';
+import { useHand } from '@/views/hand-composable';
+import { useFlip } from '@/views/flip-composable';
 
 export default defineComponent({
 
@@ -49,84 +55,14 @@ export default defineComponent({
   components: {
     Card,
     Flip,
+    HandDock,
   },
 
   setup() {
-    const _frontCardSuit = ref<Suit | null>(null);
-    const _frontCardRank = ref<Rank | null>(null);
-    const frontCardModel = computed((): CardModel | null => (
-      ((_frontCardSuit.value !== null) && (_frontCardRank.value !== null))
-        ? new CardModel(_frontCardSuit.value, _frontCardRank.value)
-        : null
-    ));
-    const _backCardSuit = ref<Suit | null>(null);
-    const _backCardRank = ref<Rank | null>(null);
-    const backCardModel = computed((): CardModel | null => (
-      ((_backCardSuit.value !== null) && (_backCardRank.value !== null))
-        ? new CardModel(_backCardSuit.value, _backCardRank.value)
-        : null
-    ));
-    const cardFlippedToFront = ref(frontCardModel.value !== null);
-    const _selectedRank = computed(() => (cardFlippedToFront.value ? _frontCardRank.value : _backCardRank.value));
-    const _selectedSuit = computed(() => (cardFlippedToFront.value ? _frontCardSuit.value : _backCardSuit.value));
-    function _flip() {
-      cardFlippedToFront.value = !cardFlippedToFront.value;
-    }
-    function _doFlipAndCancel(
-      cardModelRef: Ref<CardModel | null>,
-      cardSuitRef: Ref<Suit | null>,
-      cardRankRef: Ref<Rank | null>,
-    ) {
-      if (cardModelRef.value !== null) {
-        _flip();
-      }
-      cardSuitRef.value = null;
-      cardRankRef.value = null;
-    }
-    function _setCardAttribute<CAT1, CAT2>(
-      targetCardModelRef: Ref<CardModel | null>,
-      targetCardAttribute1Ref: Ref<CAT1 | null>,
-      targetCardAttribute2Ref: Ref<CAT2 | null>,
-      flipCardAttribute1Ref: Ref<CAT1 | null>,
-      flipCardAttribute2Ref: Ref<CAT2 | null>,
-      attributeValue: CAT1,
-    ) {
-      targetCardAttribute1Ref.value = attributeValue;
-      if (targetCardModelRef.value !== null) {
-        flipCardAttribute1Ref.value = targetCardAttribute1Ref.value;
-        flipCardAttribute2Ref.value = targetCardAttribute2Ref.value;
-        targetCardAttribute1Ref.value = null;
-        targetCardAttribute2Ref.value = null;
-        _flip();
-      }
-    }
+    const _flip = useFlip();
     return {
-      frontCardModel,
-      backCardModel,
-      cardFlippedToFront,
-      flipBack() {
-        if (cardFlippedToFront.value) {
-          _doFlipAndCancel(frontCardModel, _frontCardSuit, _frontCardRank);
-        } else {
-          _doFlipAndCancel(backCardModel, _backCardSuit, _backCardRank);
-        }
-      },
-      isRankSelected: (rank: Rank) => ((_selectedRank.value !== null) && (_selectedRank.value === rank)),
-      isSuitSelected: (suit: Suit) => ((_selectedSuit.value !== null) && (_selectedSuit.value === suit)),
-      setRank(rank: Rank) {
-        if (cardFlippedToFront.value) {
-          _setCardAttribute<Rank, Suit>(frontCardModel, _frontCardRank, _frontCardSuit, _backCardRank, _backCardSuit, rank);
-        } else {
-          _setCardAttribute<Rank, Suit>(backCardModel, _backCardRank, _backCardSuit, _frontCardRank, _frontCardSuit, rank);
-        }
-      },
-      setSuit(suit: Suit) {
-        if (cardFlippedToFront.value) {
-          _setCardAttribute<Suit, Rank>(frontCardModel, _frontCardSuit, _frontCardRank, _backCardSuit, _backCardRank, suit);
-        } else {
-          _setCardAttribute<Suit, Rank>(backCardModel, _backCardSuit, _backCardRank, _frontCardSuit, _frontCardRank, suit);
-        }
-      },
+      ..._flip,
+      ...useHand(_flip.cardFlippedToFront, _flip.frontCardModel, _flip.backCardModel),
       suits,
       suitSymbol,
       ranks,
@@ -147,7 +83,7 @@ button {
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  &.selected {
+  &:disabled {
     background-color: #e6e6e6;
     color: #999999;
   }
