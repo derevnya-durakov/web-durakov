@@ -1,7 +1,12 @@
 <template>
   <div class="flex-container">
     <div class="grid-container" :style="{ gridTemplateColumns }">
-      <div v-for="(card, index) in sortedCards" :key="index" class="grid-column">
+      <div
+        v-for="(card, index) in sortedCards"
+        :key="index"
+        class="grid-column"
+        :style="{ 'z-index': index + 1 }"
+      >
         <card
           :model="card"
           :width="5 * scale"
@@ -93,6 +98,10 @@ export default defineComponent({
     display: grid;
     .grid-column {
       justify-self: start;
+      transition: transform 0.1s;
+      &:hover {
+        transform: translate(0, -30px);
+      }
     }
   }
 }
