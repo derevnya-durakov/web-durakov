@@ -6,4 +6,6 @@ export default class State {
 
   public loggedInUser: Player | null = null;
 
+  public players: Player[] = [];
+
 }

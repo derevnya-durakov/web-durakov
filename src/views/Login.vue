@@ -1,36 +1,40 @@
 <template>
   <input v-model="nickname" type="text">
   <button @click="login">Login</button>
-  <graphql-get-access-token
+  <query-get-access-token
     v-if="committedNickname"
     :nickname="committedNickname"
   />
-  <graphql-authenticate
-    v-if="store.state.accessToken"
-    :access-token="store.state.accessToken"
+  <query-authenticate
+    v-if="authToken"
     @authenticated="navigateToGame"
   />
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
-import GraphqlAuthenticate from '@/components/graphql/Authenticate';
-import GraphqlGetAccessToken from '@/components/graphql/GetAccessToken';
+import QueryAuthenticate from '@/graphql/components/QueryAuthenticate';
+import QueryGetAccessToken from '@/graphql/components/QueryGetAccessToken';
+import State from '@/store/State';
 
-const Login = defineComponent({
+export default defineComponent({
+
+  name: 'Login',
 
   components: {
-    GraphqlAuthenticate,
-    GraphqlGetAccessToken,
+    QueryAuthenticate,
+    QueryGetAccessToken,
   },
 
   setup() {
     const _router = useRouter();
+    const _store = useStore<State>();
     return {
-      store: useStore(),
+      authToken: computed(() => _store.state.accessToken),
+      loggedIn: computed(() => _store.getters.loggedIn),
       navigateToGame() {
         _router.push({ name: 'game' });
       },
@@ -52,12 +56,10 @@ const Login = defineComponent({
   },
 
   created() {
-    if (this.store.getters.loggedIn) {
+    if (this.loggedIn) {
       this.navigateToGame();
     }
   },
 
 });
-
-export default Login;
 </script>
