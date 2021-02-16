@@ -1,11 +1,13 @@
 <template>
-  <div class="grid-container" :style="{ gridTemplateColumns }">
-    <div v-for="(card, index) in sortedCards" :key="index" class="grid-column">
-      <card
-        :model="card"
-        :width="5 * scale"
-        :height="7 * scale"
-      />
+  <div class="flex-container">
+    <div class="grid-container" :style="{ gridTemplateColumns }">
+      <div v-for="(card, index) in sortedCards" :key="index" class="grid-column">
+        <card
+          :model="card"
+          :width="5 * scale"
+          :height="7 * scale"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -84,10 +86,14 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.grid-container {
-  display: grid;
-  .grid-column {
-    justify-self: start;
+.flex-container {
+  display: flex;
+  justify-content: center;
+  .grid-container {
+    display: grid;
+    .grid-column {
+      justify-self: start;
+    }
   }
 }
 </style>
