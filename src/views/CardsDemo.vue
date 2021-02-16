@@ -4,7 +4,8 @@
       <button
         v-for="suit in suits"
         :key="suit"
-        @click="cardSuit = suit"
+        :disabled="isSuitSelected(suit)"
+        @click="setSuit(suit)"
       >
         {{suitSymbol(suit)}}
       </button>
@@ -13,52 +14,78 @@
       <button
         v-for="rank in ranks"
         :key="rank"
-        @click="cardRank = rank"
+        :disabled="isRankSelected(rank)"
+        @click="setRank(rank)"
       >
         {{rankTitle(rank)}}
       </button>
     </div>
-    <card :model="cardModel"/>
+    <flip style="margin: 0 auto;" :flipped="cardFlippedToFront">
+      <template v-slot:front>
+        <card :model="frontCardModel" @click="flipBack"/>
+      </template>
+      <template v-slot:back>
+        <card :model="backCardModel" @click="flipBack"/>
+      </template>
+    </flip>
+    <button
+      :disabled="cardFlippedToFront ? (frontCardModel === null) : (backCardModel === null)"
+      @click="addCardToHand"
+    >
+      add to hand
+    </button>
+    <hand-dock :cards="hand"/>
   </div>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
-
-import { Suit, suits, suitSymbol, Rank, ranks, rankTitle } from '@/enums';
-import CardModel from '@/models/Card';
+import { defineComponent } from 'vue';
 
 import Card from '@/components/Card.vue';
+import Flip from '@/components/Flip.vue';
+import HandDock from '@/components/HandDock.vue';
+import { suits, suitSymbol, ranks, rankTitle } from '@/enums';
+import { useHand } from '@/views/hand-composable';
+import { useFlip } from '@/views/flip-composable';
 
-@Options({
+export default defineComponent({
+
+  name: 'CardsDemo',
+
   components: {
     Card,
+    Flip,
+    HandDock,
   },
-})
-export default class Game extends Vue {
 
-  readonly Suit = Suit;
+  setup() {
+    const _flip = useFlip();
+    return {
+      ..._flip,
+      ...useHand(_flip.cardFlippedToFront, _flip.frontCardModel, _flip.backCardModel),
+      suits,
+      suitSymbol,
+      ranks,
+      rankTitle,
+    };
+  },
 
-  readonly suits = suits;
-
-  readonly suitSymbol = suitSymbol;
-
-  readonly Rank = Rank;
-
-  readonly ranks = ranks;
-
-  readonly rankTitle = rankTitle;
-
-  cardSuit: Suit | null = null;
-
-  cardRank: Rank | null = null;
-
-  get cardModel(): CardModel | null {
-    if ((this.cardSuit === null) || (this.cardRank === null)) {
-      return null;
-    }
-    return new CardModel(this.cardSuit, this.cardRank);
-  }
-
-}
+});
 </script>
+
+<style lang="scss" scoped>
+button {
+  background-color: #99ddff;
+  border: none;
+  color: #4d4d4d;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  &:disabled {
+    background-color: #e6e6e6;
+    color: #999999;
+  }
+}
+</style>
