@@ -2,10 +2,10 @@
   <input v-model="nickname" type="text">
   <button @click="add">Add</button>
   <ul>
-    <li v-for="player in players" :key="player.id">{{player.nickname}}</li>
+    <li v-for="user in users" :key="user.id">{{user.nickname}}</li>
   </ul>
-  <query-get-all-players v-if="loggedIn"/>
-  <subscription-players-updated v-if="loggedIn"/>
+  <query-get-all-users v-if="loggedIn"/>
+  <subscription-users-updated v-if="loggedIn"/>
 </template>
 
 <script lang="ts">
@@ -13,9 +13,9 @@ import { computed, defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
-import { useAddPlayerMutation } from '@/graphql/api';
-import QueryGetAllPlayers from '@/graphql/components/QueryGetAllPlayers';
-import SubscriptionPlayersUpdated from '@/graphql/components/SubscriptionPlayersUpdated';
+import { useAddUserMutation } from '@/graphql/api';
+import QueryGetAllUsers from '@/graphql/components/QueryGetAllUsers';
+import SubscriptionUsersUpdated from '@/graphql/components/SubscriptionUsersUpdated';
 import State from '@/store/State';
 
 export default defineComponent({
@@ -23,8 +23,8 @@ export default defineComponent({
   name: 'Users',
 
   components: {
-    QueryGetAllPlayers,
-    SubscriptionPlayersUpdated,
+    QueryGetAllUsers,
+    SubscriptionUsersUpdated,
   },
 
   setup() {
@@ -34,9 +34,9 @@ export default defineComponent({
       gotoLogin() {
         _router.push({ name: 'login' });
       },
-      ...useAddPlayerMutation(_store),
+      ...useAddUserMutation(_store),
       loggedIn: computed(() => _store.getters.loggedIn),
-      players: computed(() => _store.state.players),
+      users: computed(() => _store.state.users),
     };
   },
 
@@ -48,7 +48,7 @@ export default defineComponent({
 
   methods: {
     add() {
-      this.addPlayer({ nickname: this.nickname });
+      this.addUser({ nickname: this.nickname });
       this.nickname = '';
     },
   },

@@ -1,9 +1,9 @@
 import { MutationTree } from 'vuex';
 
-import { ADD_PLAYER, SET_ACCESS_TOKEN, SET_LOGGED_IN_USER, SET_PLAYERS } from '@/store/mutation-types';
+import { ADD_USER, SET_ACCESS_TOKEN, SET_LOGGED_IN_USER, SET_USERS } from '@/store/mutation-types';
 import State from '@/store/State';
 
-import Player from '@/models/Player';
+import User from '@/models/User';
 
 const mutations: MutationTree<State> = {
 
@@ -11,16 +11,16 @@ const mutations: MutationTree<State> = {
     state.accessToken = accessToken;
   },
 
-  [SET_LOGGED_IN_USER](state: State, loggedInUser: Player): void {
+  [SET_LOGGED_IN_USER](state: State, loggedInUser: User): void {
     state.loggedInUser = loggedInUser;
   },
 
-  [SET_PLAYERS](state: State, players: Player[]): void {
-    state.players = players;
+  [SET_USERS](state: State, users: User[]): void {
+    state.users = users;
   },
 
-  [ADD_PLAYER]({ players }: State, player: Player): void {
-    players.push(player);
+  [ADD_USER]({ users }: State, user: User): void {
+    users.push(user);
   },
 
 };

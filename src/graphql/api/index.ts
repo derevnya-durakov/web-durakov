@@ -11,11 +11,11 @@ export function getContext(headerXAuthToken: string | null): ConnectionParams {
   };
 }
 
-export function useAddPlayerMutation(store: Store<State>) {
-  const { mutate: addPlayer } = useMutation(
+export function useAddUserMutation(store: Store<State>) {
+  const { mutate: addUser } = useMutation(
     gql`
-      mutation addPlayer($nickname: String!) {
-        addPlayer(nickname: $nickname) {
+      mutation addUser($nickname: String!) {
+        addUser(nickname: $nickname) {
           id
           nickname
         }
@@ -23,5 +23,5 @@ export function useAddPlayerMutation(store: Store<State>) {
     `,
     { context: getContext(store.state.accessToken) },
   );
-  return { addPlayer };
+  return { addUser };
 }

@@ -21,7 +21,7 @@ export default defineComponent({
       gql`
         query authenticate {
           auth {
-            player {
+            user {
               id
               nickname
             }
@@ -34,8 +34,8 @@ export default defineComponent({
         context: getContext(_store.state.accessToken),
       },
     );
-    const _player = useResult(result, null, data => data.auth.player);
-    watch(_player, value => {
+    const _user = useResult(result, null, data => data.auth.user);
+    watch(_user, value => {
       _store.commit(SET_LOGGED_IN_USER, value);
       emit(EVENT_AUTHENTICATED);
     });

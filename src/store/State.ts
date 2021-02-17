@@ -1,11 +1,11 @@
-import Player from '@/models/Player';
+import User from '@/models/User';
 
 export default class State {
 
   public accessToken: string | null = null;
 
-  public loggedInUser: Player | null = null;
+  public loggedInUser: User | null = null;
 
-  public players: Player[] = [];
+  public users: User[] = [];
 
 }

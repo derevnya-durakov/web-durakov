@@ -4,20 +4,20 @@ import { defineComponent, watch } from 'vue';
 import { useStore } from 'vuex';
 
 import { getContext } from '@/graphql/api';
-import { ADD_PLAYER } from '@/store/mutation-types';
+import { ADD_USER } from '@/store/mutation-types';
 import State from '@/store/State';
 
 export default defineComponent({
 
-  name: 'SubscriptionPlayersUpdated',
+  name: 'SubscriptionUsersUpdated',
 
   setup() {
     const _store = useStore<State>();
     const { result } = useSubscription(gql`
-      subscription onPlayersUpdated {
-        playersUpdated {
+      subscription onUsersUpdated {
+        usersUpdated {
           name
-          player {
+          user {
             id
             nickname
           }
@@ -29,7 +29,7 @@ export default defineComponent({
     watch(
       result,
       (data) => {
-        _store.commit(ADD_PLAYER, data.playersUpdated.player);
+        _store.commit(ADD_USER, data.usersUpdated.user);
       },
       { immediate: false },
     );
