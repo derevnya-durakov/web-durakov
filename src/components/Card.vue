@@ -10,9 +10,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, toRefs } from 'vue';
+import { computed, defineComponent, Ref, toRef } from 'vue';
 
-import { Rank } from '@/enums';
+import CardModel from '@/model/Card';
 
 export default defineComponent({
 
@@ -34,11 +34,11 @@ export default defineComponent({
   },
 
   setup(props) {
-    const { model } = toRefs(props);
+    const model = toRef(props, 'model') as Ref<CardModel | null>;
     return {
       face: computed(() => (
-        model.value
-          ? `${model.value.suit}${Rank[model.value.rank]}.svg`
+        (model.value !== null)
+          ? `${model.value.suit}${model.value.rank}.svg`
           : 'CardBack.svg'
       )),
     };

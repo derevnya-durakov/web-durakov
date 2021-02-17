@@ -21,8 +21,8 @@
 import { computed, defineComponent, Ref, toRef } from 'vue';
 
 import Card from '@/components/Card.vue';
-import { Suit, Rank } from '@/enums';
-import CardModel from '@/models/Card';
+import { Suit, Rank, rankValue } from '@/enums';
+import CardModel from '@/model/Card';
 
 export default defineComponent({
 
@@ -69,9 +69,11 @@ export default defineComponent({
                 : card1.suit.localeCompare(card2.suit))));
           return ((suitComparation !== 0)
             ? suitComparation
-            : ((card1.rank > card2.rank)
+            : ((rankValue(card1.rank) > rankValue(card2.rank))
               ? -1
-              : ((card1.rank < card2.rank) ? 1 : 0)));
+              : ((rankValue(card1.rank) < rankValue(card2.rank))
+                ? 1
+                : 0)));
         });
         return toSort;
       }),

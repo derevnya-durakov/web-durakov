@@ -1,7 +1,7 @@
 import { ComputedRef, computed, Ref, ref } from 'vue';
 
 import { Rank, Suit } from '@/enums';
-import Card from '@/models/Card';
+import Card from '@/model/Card';
 
 interface ComposedCard {
   suit: Ref<Suit | null>;
