@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useResult } from '@vue/apollo-composable';
+import { useMutation, useQuery, useResult, useSubscription } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
 import { ConnectionParams } from 'subscriptions-transport-ws';
 import { watch } from 'vue';
@@ -29,7 +29,7 @@ export function useAddUserMutation(store: Store<State>) {
 }
 
 export function useGetGameStateQuery(store: Store<State>) {
-  const { refetch: getGameState, result } = useQuery(
+  const { refetch, result } = useQuery(
     gql`
       query getGameState($gameId: ID!) {
         getGameState(id: $gameId) {
@@ -78,6 +78,30 @@ export function useGetGameStateQuery(store: Store<State>) {
     store.commit(SET_GAME_STATE, value);
   });
   return {
-    getGameState,
+    getGameState: refetch as Function,
   };
 }
+
+export function useGameUpdatedSubscription(store: Store<State>, getGameState: Function) {
+  const { result } = useSubscription(
+    gql`
+      subscription onGameUpdated($gameId: ID!) {
+        gameUpdated(id: $gameId) {
+          name
+        }
+      }
+    `,
+    { gameId: store.state.gameId },
+    { context: getContext(store.state.accessToken) },
+  );
+  const _gameUpdated = useResult(result);
+  watch(
+    _gameUpdated,
+    () => {
+      getGameState();
+    },
+    { immediate: false },
+  );
+}
+
+export { useAttackMutation } from '@/graphql/api/game-actions';

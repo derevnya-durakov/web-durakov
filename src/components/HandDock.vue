@@ -11,6 +11,7 @@
           :model="card"
           :width="5 * scale"
           :height="7 * scale"
+          @click="emitCardClicked(card)"
         />
       </div>
     </div>
@@ -24,6 +25,8 @@ import Card from '@/components/Card.vue';
 import { Suit, Rank, rankValue } from '@/enums';
 import CardModel from '@/model/Card';
 
+const EVENT_CARD_CLICKED = 'card-clicked';
+
 export default defineComponent({
 
   name: 'HandDock',
@@ -31,6 +34,8 @@ export default defineComponent({
   components: {
     Card,
   },
+
+  emits: [ EVENT_CARD_CLICKED ],
 
   props: {
     cards: {
@@ -51,7 +56,7 @@ export default defineComponent({
     },
   },
 
-  setup(props) {
+  setup(props, { emit: _emit }) {
     const _cards = toRef(props, 'cards') as Ref<CardModel[]>;
     const _trumpSuit = toRef(props, 'trumpSuit') as Ref<Suit>;
     return {
@@ -77,6 +82,9 @@ export default defineComponent({
         });
         return toSort;
       }),
+      emitCardClicked(card: CardModel) {
+        _emit(EVENT_CARD_CLICKED, card);
+      },
     };
   },
 

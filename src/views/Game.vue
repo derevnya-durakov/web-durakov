@@ -22,10 +22,14 @@
     <player-panel
       v-if="myPlayer !== null"
       :model="myPlayer"
-      :action-icon="getActionIcon(myPlayer)"/>
-    <hand-dock :cards="myHand" :trump-suit="trumpSuit"/>
+      :action-icon="getActionIcon(myPlayer)"
+    />
+    <hand-dock
+      :cards="myHand"
+      :trump-suit="trumpSuit"
+      @card-clicked="doGameAction"
+    />
   </div>
-  <subscription-game-updated v-if="loggedIn"/>
 </template>
 
 <script lang="ts">
@@ -37,8 +41,8 @@ import CardDeck from '@/components/CardDeck.vue';
 import HandDock from '@/components/HandDock.vue';
 import PlayerPanel from '@/components/PlayerPanel.vue';
 import { ActionIcon } from '@/enums';
-import { useGetGameStateQuery } from '@/graphql/api';
-import SubscriptionGameUpdated from '@/graphql/components/SubscriptionGameUpdated';
+import { useAttackMutation, useGameUpdatedSubscription, useGetGameStateQuery } from '@/graphql/api';
+import Card from '@/model/Card';
 import Player from '@/model/Player';
 import State from '@/store/State';
 
@@ -50,20 +54,22 @@ export default defineComponent({
     CardDeck,
     HandDock,
     PlayerPanel,
-    SubscriptionGameUpdated,
   },
 
   setup() {
     const _router = useRouter();
     const _store = useStore<State>();
-    useGetGameStateQuery(_store);
+    const { getGameState } = useGetGameStateQuery(_store);
+    useGameUpdatedSubscription(_store, getGameState as any);
     const _attacker = computed(() => _store.getters.attacker);
     const _defender = computed(() => _store.getters.defender);
+    const myPlayer = computed(() => _store.getters.myPlayer);
+    const { attack: _attack } = useAttackMutation(_store);
     return {
       loggedIn: computed(() => _store.getters.loggedIn),
       loggedInUser: computed(() => _store.state.loggedInUser),
       myHand: computed(() => _store.getters.myHand),
-      myPlayer: computed(() => _store.getters.myPlayer),
+      myPlayer,
       opponents: computed(() => _store.getters.opponents),
       deckSize: computed(() => _store.state.gameState?.deckSize || 0),
       lastTrump: computed(() => _store.state.gameState?.lastTrump || null),
@@ -78,6 +84,11 @@ export default defineComponent({
           return ActionIcon.Defence;
         } else {
           return null;
+        }
+      },
+      doGameAction(card: Card) {
+        if (myPlayer.value === _attacker.value) {
+          _attack({ gameId: _store.state.gameId, attack: { suit: card.suit, rank: card.rank } });
         }
       },
       router: useRouter(),
