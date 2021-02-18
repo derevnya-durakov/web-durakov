@@ -8,7 +8,14 @@
     />
   </div>
   <div class="middle-layout">
-    <div></div>
+    <div class="round">
+      <round-pair
+        v-for="(roundPair, index) in round"
+        class="round-pair"
+        :key="index"
+        :model="roundPair"
+      />
+    </div>
     <div>
       <card-deck
         :deck-size="deckSize"
@@ -40,6 +47,7 @@ import { useStore } from 'vuex';
 import CardDeck from '@/components/CardDeck.vue';
 import HandDock from '@/components/HandDock.vue';
 import PlayerPanel from '@/components/PlayerPanel.vue';
+import RoundPair from '@/components/RoundPair.vue';
 import { ActionIcon } from '@/enums';
 import { useAttackMutation, useGameUpdatedSubscription, useGetGameStateQuery } from '@/graphql/api';
 import Card from '@/model/Card';
@@ -54,6 +62,7 @@ export default defineComponent({
     CardDeck,
     HandDock,
     PlayerPanel,
+    RoundPair,
   },
 
   setup() {
@@ -74,6 +83,7 @@ export default defineComponent({
       deckSize: computed(() => _store.state.gameState?.deckSize || 0),
       lastTrump: computed(() => _store.state.gameState?.lastTrump || null),
       trumpSuit: computed(() => _store.state.gameState?.trumpSuit || null),
+      round: computed(() => _store.state.gameState?.round || []),
       navigateToLogin() {
         _router.push({ name: 'login' });
       },
@@ -121,5 +131,16 @@ export default defineComponent({
   position: absolute;
   bottom: 0%;
   width: 100%
+}
+.round {
+  display: flex;
+  justify-content: center;
+  &-pair {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    &:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
 }
 </style>
