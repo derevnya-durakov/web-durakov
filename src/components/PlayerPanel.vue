@@ -12,7 +12,11 @@
       </div>
       <div class="centered-horizontally">
         <div class="centered-vertically">
-          <card-deck :deck-size="model.handSize" card-width="50" card-height="70"/>
+          <card-deck
+            :deck-size="model.handSize"
+            :card-width="50"
+            :card-height="70"
+          />
         </div>
       </div>
     </div>

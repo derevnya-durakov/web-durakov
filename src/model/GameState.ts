@@ -11,6 +11,8 @@ export default interface GameState {
 
   trumpSuit: Suit;
 
+  lastTrump: Card | null;
+
   deckSize: number;
 
   discardPileSize: number;

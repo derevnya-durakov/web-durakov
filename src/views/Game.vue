@@ -7,6 +7,17 @@
       :action-icon="getActionIcon(opponent)"
     />
   </div>
+  <div class="middle-layout">
+    <div></div>
+    <div>
+      <card-deck
+        :deck-size="deckSize"
+        :trump-card="lastTrump"
+        :card-width="125"
+        :card-height="175"
+      />
+    </div>
+  </div>
   <div class="bottom-layout">
     <player-panel
       v-if="myPlayer !== null"
@@ -22,6 +33,7 @@ import { computed, defineComponent } from 'vue';
 import { useRouter } from 'vue-router'; 
 import { useStore } from 'vuex';
 
+import CardDeck from '@/components/CardDeck.vue';
 import HandDock from '@/components/HandDock.vue';
 import PlayerPanel from '@/components/PlayerPanel.vue';
 import { ActionIcon } from '@/enums';
@@ -35,6 +47,7 @@ export default defineComponent({
   name: 'Game',
 
   components: {
+    CardDeck,
     HandDock,
     PlayerPanel,
     SubscriptionGameUpdated,
@@ -52,6 +65,8 @@ export default defineComponent({
       myHand: computed(() => _store.getters.myHand),
       myPlayer: computed(() => _store.getters.myPlayer),
       opponents: computed(() => _store.getters.opponents),
+      deckSize: computed(() => _store.state.gameState?.deckSize || 0),
+      lastTrump: computed(() => _store.state.gameState?.lastTrump || null),
       trumpSuit: computed(() => _store.state.gameState?.trumpSuit || null),
       navigateToLogin() {
         _router.push({ name: 'login' });
@@ -84,6 +99,10 @@ export default defineComponent({
 .top-layout {
   display: flex;
   justify-content: center;
+}
+.middle-layout {
+  display: grid;
+  grid-template-columns: auto 300px;
 }
 .bottom-layout {
   display: grid;

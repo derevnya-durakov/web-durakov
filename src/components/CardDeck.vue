@@ -1,6 +1,19 @@
 <template>
-  <div class="relative-container">
-    <card :width="cardWidth" :height="cardHeight"/>
+  <div class="relative-container" :style="{ width: `${cardHeight}px`, height: `${cardHeight}px` }">
+    <card
+      class="deck"
+      :width="cardWidth"
+      :height="cardHeight"
+      :style="{ left: `${cardHeight - cardWidth}px` }"
+    />
+    <card
+      v-if="trumpCard !== null"
+      :model="trumpCard"
+      :width="cardWidth"
+      :height="cardHeight"
+      class="rotated"
+      :style="{ left: `${(cardHeight - cardWidth) / 2}px` }"
+    />
     <div class="deck-size">{{deckSize}}</div>
   </div>
 </template>
@@ -42,9 +55,17 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .relative-container {
-  width: 50px;
-  height: 70px;
+  // background-color: red;
   position: relative;
+  .rotated {
+    position: absolute;
+    transform: rotate(-90deg);
+    z-index: 0;
+  }
+  .deck {
+    position: absolute;
+    z-index: 1;
+  }
   .deck-size {
     width: 24px;
     height: 24px;
@@ -54,8 +75,9 @@ export default defineComponent({
     border: 2px solid rgb(85, 58, 110);
     background-color: rgb(217, 183, 231);
     position: absolute;
-    bottom: -10px;
-    right: -10px;
+    bottom: -12px;
+    right: -12px;
+    z-index: 1;
   }
 }
 </style>

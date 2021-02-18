@@ -36,6 +36,10 @@ export function useGetGameStateQuery(store: Store<State>) {
           id
           nonce
           trumpSuit
+          lastTrump {
+            suit
+            rank
+          }
           deckSize
           discardPileSize
           hand {
