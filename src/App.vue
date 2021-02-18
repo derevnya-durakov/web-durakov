@@ -1,11 +1,11 @@
 <template>
-  <nav>
+  <!-- <nav>
     <router-link v-if="!isCurrentRoute('demo')" to="/demo">&lt;Demo&gt;</router-link>
     <router-link v-if="!isCurrentRoute('game')" to="/game">&lt;Game&gt;</router-link>
     <router-link v-if="!isCurrentRoute('users')" to="/users">&lt;Users&gt;</router-link>
     <router-link v-if="!isCurrentRoute('login') && !loggedIn" to="/login">&lt;Login&gt;</router-link>
     <button v-if="loggedIn" @click="logout">Logout</button>
-  </nav>
+  </nav> -->
   <router-view/>
 </template>
 

@@ -86,3 +86,10 @@ export function rankTitle(rank: Rank): '6' | '7' | '8' | '9' | '10' | 'J' | 'Q' 
     case Rank.Ace: return 'A';
   }
 }
+
+//
+
+export enum ActionIcon {
+  Attack = 'Attack',
+  Defence = 'Defence',
+}
