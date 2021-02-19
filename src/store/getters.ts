@@ -40,6 +40,8 @@ const getters: GetterTree<State, State> = {
     : null
   ),
 
+  iAmDefender: (_, { defender, myPlayer }) => (((defender !== null) && (myPlayer !== null)) && (defender === myPlayer)),
+
   opponents({ loggedInUser, gameState }: State): Player[] {
     if ((loggedInUser === null) || (gameState === null)) {
       return [];

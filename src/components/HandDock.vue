@@ -9,8 +9,6 @@
       >
         <card
           :model="card"
-          :width="5 * scale"
-          :height="7 * scale"
           @click="emitCardClicked(card)"
         />
       </div>
@@ -22,6 +20,7 @@
 import { computed, defineComponent, Ref, toRef } from 'vue';
 
 import Card from '@/components/Card.vue';
+import { CARD_HEIGHT_RATIO, CARD_WIDTH_RATIO, DEFAULT_CARD_SCALE } from '@/constants';
 import { Suit, Rank, rankValue } from '@/enums';
 import CardModel from '@/model/Card';
 
@@ -54,14 +53,19 @@ export default defineComponent({
       type: String,
       default: Suit.Hearts,
     },
+    cardScale: {
+      type: Number,
+      default: DEFAULT_CARD_SCALE,
+    },
   },
 
   setup(props, { emit: _emit }) {
     const _cards = toRef(props, 'cards') as Ref<CardModel[]>;
     const _trumpSuit = toRef(props, 'trumpSuit') as Ref<Suit>;
+    const _cardScale = toRef(props, 'cardScale') as Ref<number>;
+    const _cardWidth = computed(() => (_cardScale.value * CARD_WIDTH_RATIO));
+    const maxGap = 5;
     return {
-      scale: 25,
-      maxGap: 5,
       sortedCards: computed(() => {
         const toSort = [ ..._cards.value ];
         toSort.sort((card1, card2) => {
@@ -82,19 +86,14 @@ export default defineComponent({
         });
         return toSort;
       }),
+      gridTemplateColumns: computed(() => ((_cards.value.length > 0)
+        ? `repeat(${_cards.value.length - 1}, minmax(1px, ${_cardWidth.value + maxGap}px)) ${_cardWidth.value}px`
+        : '1fr'
+      )),
       emitCardClicked(card: CardModel) {
         _emit(EVENT_CARD_CLICKED, card);
       },
     };
-  },
-
-  computed: {
-    gridTemplateColumns(): string {
-      return ((this.cards.length > 0)
-        ? `repeat(${this.cards.length - 1}, minmax(1px, ${5 * this.scale + this.maxGap}px)) ${5 * this.scale}px`
-        : '1fr'
-      );
-    }
   },
 
 });

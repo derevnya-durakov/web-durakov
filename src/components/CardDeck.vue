@@ -1,27 +1,22 @@
 <template>
-  <div class="relative-container" :style="{ width: `${cardHeight}px`, height: `${cardHeight}px` }">
-    <card
-      class="deck"
-      :width="cardWidth"
-      :height="cardHeight"
-      :style="{ left: `${cardHeight - cardWidth}px` }"
-    />
+  <div class="relative-container" :style="relativeContainerStyle">
+    <card class="deck" :scale="cardScale"/>
     <card
       v-if="trumpCard !== null"
+      class="trump-card"
       :model="trumpCard"
-      :width="cardWidth"
-      :height="cardHeight"
-      class="rotated"
-      :style="{ left: `${(cardHeight - cardWidth) / 2}px` }"
+      :scale="cardScale"
+      :style="trumpCardStyle"
     />
     <div class="deck-size">{{deckSize}}</div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent, Ref, toRef } from 'vue';
 
 import Card from '@/components/Card.vue';
+import { CARD_HEIGHT_RATIO, CARD_WIDTH_RATIO, DEFAULT_CARD_SCALE } from '@/constants';
 
 export default defineComponent({
 
@@ -40,14 +35,20 @@ export default defineComponent({
       type: Object,
       default: null,
     },
-    cardWidth: {
+    cardScale: {
       type: Number,
-      required: true,
+      default: DEFAULT_CARD_SCALE,
     },
-    cardHeight: {
-      type: Number,
-      required: true,
-    },
+  },
+
+  setup(props) {
+    const _cardScale = toRef(props, 'cardScale') as Ref<number>;
+    const _cardWidth = computed(() => (_cardScale.value * CARD_WIDTH_RATIO));
+    const _cardHeight = computed(() => (_cardScale.value * CARD_HEIGHT_RATIO));
+    return {
+      relativeContainerStyle: computed(() => ({ width: `${_cardHeight.value}px`, height: `${_cardHeight.value}px`})),
+      trumpCardStyle: computed(() => ({ left: `${(_cardHeight.value - _cardWidth.value) / 2}px` })),
+    };
   },
 
 });
@@ -55,15 +56,15 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .relative-container {
-  // background-color: red;
   position: relative;
-  .rotated {
+  .trump-card {
     position: absolute;
     transform: rotate(-90deg);
     z-index: 0;
   }
   .deck {
     position: absolute;
+    right: 0;
     z-index: 1;
   }
   .deck-size {

@@ -1,7 +1,9 @@
 import Card from '@/model/Card';
 
-export default class RoundPair {
+export default interface RoundPair {
 
-  constructor(attack: Card, defence: Card | null) {}
+  attack: Card;
+
+  defence: Card | null;
 
 }

@@ -1,41 +1,38 @@
 <template>
-  <div class="top-layout">
-    <player-panel
-      v-for="opponent in opponents"
-      :key="opponent.user.id"
-      :model="opponent"
-      :action-icon="getActionIcon(opponent)"
-    />
-  </div>
-  <div class="middle-layout">
-    <div class="round">
-      <round-pair
-        v-for="(roundPair, index) in round"
-        class="round-pair"
-        :key="index"
-        :model="roundPair"
+  <div class="layout-vertical">
+    <div class="top-layout">
+      <player-panel
+        v-for="opponent in opponents"
+        :key="opponent.user.id"
+        :model="opponent"
+        :action-icon="getActionIcon(opponent)"
       />
     </div>
-    <div>
-      <card-deck
-        :deck-size="deckSize"
-        :trump-card="lastTrump"
-        :card-width="125"
-        :card-height="175"
+    <div class="middle-layout">
+      <div class="round">
+        <round-pair
+          v-for="(roundPair, index) in round"
+          class="round-pair"
+          :key="index"
+          :model="roundPair"
+        />
+      </div>
+      <div>
+        <card-deck :deck-size="deckSize" :trump-card="lastTrump"/>
+      </div>
+    </div>
+    <div class="bottom-layout">
+      <player-panel
+        v-if="myPlayer !== null"
+        :model="myPlayer"
+        :action-icon="getActionIcon(myPlayer)"
+      />
+      <hand-dock
+        :cards="myHand"
+        :trump-suit="trumpSuit"
+        @card-clicked="doGameAction"
       />
     </div>
-  </div>
-  <div class="bottom-layout">
-    <player-panel
-      v-if="myPlayer !== null"
-      :model="myPlayer"
-      :action-icon="getActionIcon(myPlayer)"
-    />
-    <hand-dock
-      :cards="myHand"
-      :trump-suit="trumpSuit"
-      @card-clicked="doGameAction"
-    />
   </div>
 </template>
 
@@ -117,9 +114,19 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.layout-vertical {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  height: 100%;
+  min-height: 100%;
+}
 .top-layout {
   display: flex;
   justify-content: center;
+  position: absolute;
+  top: 0%;
+  width: 100%;
 }
 .middle-layout {
   display: grid;

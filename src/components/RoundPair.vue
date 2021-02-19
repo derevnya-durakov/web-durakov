@@ -3,25 +3,24 @@
     <card
       class="attack"
       :model="model.attack"
-      :width="width"
-      :height="height"
+      :hoverable="attackHoverable"
     />
     <card
       v-if="model.defence !== null"
       class="defence"
       :model="model.defence"
-      :width="width"
-      :height="height"
-      :style="{ top: defenceTopOffset }"
+      :style="defenceStyle"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent, Ref, toRef } from 'vue';
+import { useStore } from 'vuex';
 
 import Card from '@/components/Card.vue';
 import { CARD_WIDTH_RATIO, CARD_HEIGHT_RATIO, DEFAULT_CARD_SCALE } from '@/constants';
+import State from '@/store/State';
 
 export default defineComponent({
 
@@ -36,18 +35,25 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    cardScale: {
+      type: Number,
+      default: DEFAULT_CARD_SCALE,
+    },
   },
 
-  setup() {
-    const width = DEFAULT_CARD_SCALE * CARD_WIDTH_RATIO;
-    const height = DEFAULT_CARD_SCALE * CARD_HEIGHT_RATIO;
+  setup(props) {
+    const _model = toRef(props, 'model'); // NOTE: to avoid "Property 'defence' does not exist on type 'RoundPair'"
+                                          // we do not type '_model' as Ref<RoundPair>
+    const _cardScale = toRef(props, 'cardScale') as Ref<number>;
+    const _store = useStore<State>();
+    const _width = computed(() => (_cardScale.value * CARD_WIDTH_RATIO));
+    const _height = computed(() => (_cardScale.value * CARD_HEIGHT_RATIO));
     const _defenceTopOffsetScale = 2;
     const _defenceTopOffset = _defenceTopOffsetScale * DEFAULT_CARD_SCALE;
     return {
-      width,
-      height,
-      defenceTopOffset: `${_defenceTopOffset}px`,
-      relativeContainerStyle: { width: `${width}px`, height: `${height + _defenceTopOffset}px` },
+      defenceStyle: { top: `${_defenceTopOffset}px` },
+      relativeContainerStyle: { width: `${_width.value}px`, height: `${_height.value + _defenceTopOffset}px` },
+      attackHoverable: computed(() => (_store.getters.loggedIn && _store.getters.iAmDefender && (_model.value?.defence === null))),
     };
   },
 

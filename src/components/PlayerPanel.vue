@@ -14,8 +14,7 @@
         <div class="centered-vertically">
           <card-deck
             :deck-size="model.handSize"
-            :card-width="50"
-            :card-height="70"
+            :card-scale="10"
           />
         </div>
       </div>
@@ -52,6 +51,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .player-panel {
+  z-index: 1;
   .grid-container {
     display: grid;
     grid-template-columns: 100px 100px;
