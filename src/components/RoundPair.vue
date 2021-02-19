@@ -19,8 +19,9 @@ import { computed, defineComponent, Ref, toRef } from 'vue';
 import { useStore } from 'vuex';
 
 import Card from '@/components/Card.vue';
-import { CARD_WIDTH_RATIO, CARD_HEIGHT_RATIO, DEFAULT_CARD_SCALE } from '@/constants';
+import { DEFAULT_CARD_SCALE } from '@/constants';
 import State from '@/store/State';
+import { useCardSize } from '@/playing-card-composable';
 
 export default defineComponent({
 
@@ -45,14 +46,13 @@ export default defineComponent({
     const _model = toRef(props, 'model'); // NOTE: to avoid "Property 'defence' does not exist on type 'RoundPair'"
                                           // we do not type '_model' as Ref<RoundPair>
     const _cardScale = toRef(props, 'cardScale') as Ref<number>;
+    const { width: _cardWidth, height: _cardHeight } = useCardSize(_cardScale);
     const _store = useStore<State>();
-    const _width = computed(() => (_cardScale.value * CARD_WIDTH_RATIO));
-    const _height = computed(() => (_cardScale.value * CARD_HEIGHT_RATIO));
     const _defenceTopOffsetScale = 2;
     const _defenceTopOffset = _defenceTopOffsetScale * DEFAULT_CARD_SCALE;
     return {
       defenceStyle: { top: `${_defenceTopOffset}px` },
-      relativeContainerStyle: { width: `${_width.value}px`, height: `${_height.value + _defenceTopOffset}px` },
+      relativeContainerStyle: { width: `${_cardWidth.value}px`, height: `${_cardHeight.value + _defenceTopOffset}px` },
       attackHoverable: computed(() => (_store.getters.loggedIn && _store.getters.iAmDefender && (_model.value?.defence === null))),
     };
   },

@@ -20,9 +20,10 @@
 import { computed, defineComponent, Ref, toRef } from 'vue';
 
 import Card from '@/components/Card.vue';
-import { CARD_HEIGHT_RATIO, CARD_WIDTH_RATIO, DEFAULT_CARD_SCALE } from '@/constants';
+import { DEFAULT_CARD_SCALE } from '@/constants';
 import { Suit, Rank, rankValue } from '@/enums';
 import CardModel from '@/model/Card';
+import { useCardSize } from '@/playing-card-composable';
 
 const EVENT_CARD_CLICKED = 'card-clicked';
 
@@ -63,7 +64,7 @@ export default defineComponent({
     const _cards = toRef(props, 'cards') as Ref<CardModel[]>;
     const _trumpSuit = toRef(props, 'trumpSuit') as Ref<Suit>;
     const _cardScale = toRef(props, 'cardScale') as Ref<number>;
-    const _cardWidth = computed(() => (_cardScale.value * CARD_WIDTH_RATIO));
+    const { width: _cardWidth } = useCardSize(_cardScale);
     const maxGap = 5;
     return {
       sortedCards: computed(() => {

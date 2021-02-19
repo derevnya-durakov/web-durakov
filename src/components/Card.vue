@@ -13,8 +13,9 @@
 <script lang="ts">
 import { computed, defineComponent, Ref, toRef } from 'vue';
 
-import { CARD_WIDTH_RATIO, CARD_HEIGHT_RATIO, DEFAULT_CARD_SCALE } from '@/constants';
+import { DEFAULT_CARD_SCALE } from '@/constants';
 import CardModel from '@/model/Card';
+import { useCardSize } from '@/playing-card-composable';
 
 export default defineComponent({
 
@@ -38,8 +39,7 @@ export default defineComponent({
   setup(props) {
     const _model = toRef(props, 'model') as Ref<CardModel | null>;
     const _scale = toRef(props, 'scale') as Ref<number>;
-    const width = computed(() => (_scale.value * CARD_WIDTH_RATIO));
-    const height = computed(() => (_scale.value * CARD_HEIGHT_RATIO));
+    const { width, height } = useCardSize(_scale);
     return {
       face: computed(() => (
         (_model.value !== null)

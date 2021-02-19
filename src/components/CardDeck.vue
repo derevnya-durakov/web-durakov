@@ -16,7 +16,8 @@
 import { computed, defineComponent, Ref, toRef } from 'vue';
 
 import Card from '@/components/Card.vue';
-import { CARD_HEIGHT_RATIO, CARD_WIDTH_RATIO, DEFAULT_CARD_SCALE } from '@/constants';
+import { DEFAULT_CARD_SCALE } from '@/constants';
+import { useCardSize } from '@/playing-card-composable';
 
 export default defineComponent({
 
@@ -43,8 +44,7 @@ export default defineComponent({
 
   setup(props) {
     const _cardScale = toRef(props, 'cardScale') as Ref<number>;
-    const _cardWidth = computed(() => (_cardScale.value * CARD_WIDTH_RATIO));
-    const _cardHeight = computed(() => (_cardScale.value * CARD_HEIGHT_RATIO));
+    const { width: _cardWidth, height: _cardHeight } = useCardSize(_cardScale);
     return {
       relativeContainerStyle: computed(() => ({ width: `${_cardHeight.value}px`, height: `${_cardHeight.value}px`})),
       trumpCardStyle: computed(() => ({ left: `${(_cardHeight.value - _cardWidth.value) / 2}px` })),
