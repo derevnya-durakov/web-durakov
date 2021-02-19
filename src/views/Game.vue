@@ -47,7 +47,7 @@ import PlayerPanel from '@/components/PlayerPanel.vue';
 import RoundPair from '@/components/RoundPair.vue';
 import { ActionIcon } from '@/enums';
 import { useAttackMutation, useDefendMutation, useGameUpdatedSubscription, useGetGameStateQuery } from '@/graphql/api';
-import Card from '@/model/Card';
+import Card, { beats } from '@/model/Card';
 import Player from '@/model/Player';
 import State from '@/store/State';
 
@@ -72,9 +72,19 @@ export default defineComponent({
     const _iAmAttacker = computed(() => _store.getters.iAmAttacker);
     const _iAmDefender = computed(() => _store.getters.iAmDefender);
     const _firstCardToDefend = computed(() => _store.getters.firstCardToDefend);
+    const _availableRanksForAttack = computed(() => _store.getters.availableRanksForAttack);
     const myPlayer = computed(() => _store.getters.myPlayer);
     const { attack: _attack } = useAttackMutation(_store);
     const { defend: _defend } = useDefendMutation(_store);
+    const _iCanAttackWith = (card: Card) => (
+      (_availableRanksForAttack.value.length === 0)
+      || _availableRanksForAttack.value.includes(card.rank)
+    );
+    const _iCanDefendWith = (card: Card) => (
+      (_store.state.gameState !== null)
+      && (_firstCardToDefend.value !== null)
+      && beats(card, _firstCardToDefend.value, _store.state.gameState.trumpSuit)
+    );
     return {
       loggedIn: computed(() => _store.getters.loggedIn),
       loggedInUser: computed(() => _store.state.loggedInUser),
@@ -99,13 +109,17 @@ export default defineComponent({
       },
       doGameAction(card: Card) {
         if (_iAmAttacker.value) {
-          _attack({ gameId: _store.state.gameId, attack: { suit: card.suit, rank: card.rank } });
+          if (_iCanAttackWith(card)) {
+            _attack({ gameId: _store.state.gameId, attack: { suit: card.suit, rank: card.rank } });
+          }
         } else if (_iAmDefender.value) {
-          _defend({
-            gameId: _store.state.gameId,
-            attack: { suit: _firstCardToDefend.value.suit, rank: _firstCardToDefend.value.rank },
-            defence: { suit: card.suit, rank: card.rank },
-          });
+          if (_iCanDefendWith(card)) {
+            _defend({
+              gameId: _store.state.gameId,
+              attack: { suit: _firstCardToDefend.value.suit, rank: _firstCardToDefend.value.rank },
+              defence: { suit: card.suit, rank: card.rank },
+            });
+          }
         }
       },
       router: useRouter(),

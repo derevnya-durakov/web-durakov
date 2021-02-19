@@ -1,5 +1,6 @@
 import { GetterTree } from 'vuex';
 
+import { Rank } from '@/enums';
 import Card from '@/model/Card';
 import Player from '@/model/Player';
 import State from '@/store/State';
@@ -64,6 +65,19 @@ const getters: GetterTree<State, State> = {
     ? (gameState.round.filter(rp => (rp.defence === null))[0]?.attack || null)
     : null
   ),
+
+  availableRanksForAttack({ gameState }: State, { iAmAttacker }): Rank[] {
+    if ((gameState === null) || !iAmAttacker) {
+      return [];
+    }
+    const rankArrays = gameState.round
+        .map(({ attack, defence }) => ((defence !== null) ? [ attack.rank, defence.rank ] : [ attack.rank ]));
+    switch (rankArrays.length) {
+      case 0: return [];
+      case 1: return [ ...new Set(rankArrays[0]) ];
+      default: return [ ...new Set(rankArrays.reduce((acc, cur) => acc.concat(...cur))) ];
+    }
+  },
 
 };
 
