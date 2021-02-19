@@ -6,6 +6,7 @@
       :src="`/img/cards/${face}`"
       :alt="face"
       :class="{ hoverable }"
+      @click="emitCardClick"
     >
   </div>
 </template>
@@ -13,13 +14,15 @@
 <script lang="ts">
 import { computed, defineComponent, Ref, toRef } from 'vue';
 
-import { DEFAULT_CARD_SCALE } from '@/constants';
+import { DEFAULT_CARD_SCALE, EVENT_CARD_CLICK } from '@/constants';
 import CardModel from '@/model/Card';
 import { useCardSize } from '@/playing-card-composable';
 
 export default defineComponent({
 
   name: 'Card',
+
+  emits: [ EVENT_CARD_CLICK ],
 
   props: {
     model: {
@@ -36,7 +39,7 @@ export default defineComponent({
     },
   },
 
-  setup(props) {
+  setup(props, { emit: _emit }) {
     const _model = toRef(props, 'model') as Ref<CardModel | null>;
     const _scale = toRef(props, 'scale') as Ref<number>;
     const { width, height } = useCardSize(_scale);
@@ -49,6 +52,9 @@ export default defineComponent({
       width,
       height,
       relativeContainerStyle: computed(() => ({ width: `${width.value}px`, height: `${height.value}px` })),
+      emitCardClick() {
+        _emit(EVENT_CARD_CLICK, _model.value);
+      },
     };
   },
 

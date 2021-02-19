@@ -30,7 +30,7 @@
       <hand-dock
         :cards="myHand"
         :trump-suit="trumpSuit"
-        @card-clicked="doGameAction"
+        @card-click="doGameAction"
       />
     </div>
   </div>

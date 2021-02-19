@@ -5,12 +5,8 @@
         v-for="(card, index) in sortedCards"
         :key="index"
         class="grid-column"
-        :style="{ 'z-index': index + 1 }"
       >
-        <card
-          :model="card"
-          @click="emitCardClicked(card)"
-        />
+        <card :model="card" @card-click="emitCardClick"/>
       </div>
     </div>
   </div>
@@ -20,12 +16,10 @@
 import { computed, defineComponent, Ref, toRef } from 'vue';
 
 import Card from '@/components/Card.vue';
-import { DEFAULT_CARD_SCALE } from '@/constants';
+import { DEFAULT_CARD_SCALE, EVENT_CARD_CLICK } from '@/constants';
 import { Suit, Rank, rankValue } from '@/enums';
 import CardModel from '@/model/Card';
 import { useCardSize } from '@/playing-card-composable';
-
-const EVENT_CARD_CLICKED = 'card-clicked';
 
 export default defineComponent({
 
@@ -35,7 +29,7 @@ export default defineComponent({
     Card,
   },
 
-  emits: [ EVENT_CARD_CLICKED ],
+  emits: [ EVENT_CARD_CLICK ],
 
   props: {
     cards: {
@@ -91,8 +85,8 @@ export default defineComponent({
         ? `repeat(${_cards.value.length - 1}, minmax(1px, ${_cardWidth.value + maxGap}px)) ${_cardWidth.value}px`
         : '1fr'
       )),
-      emitCardClicked(card: CardModel) {
-        _emit(EVENT_CARD_CLICKED, card);
+      emitCardClick(card: CardModel) {
+        _emit(EVENT_CARD_CLICK, card);
       },
     };
   },
@@ -108,6 +102,7 @@ export default defineComponent({
     display: grid;
     .grid-column {
       justify-self: start;
+      z-index: auto;
       transition: transform 0.1s;
       &:hover {
         transform: translate(0, -30px);
