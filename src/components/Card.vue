@@ -5,7 +5,7 @@
       :height="height"
       :src="`/img/cards/${face}`"
       :alt="face"
-      :class="{ hoverable }"
+      :class="{ hoverable, selected }"
       @click="emitCardClick"
     >
   </div>
@@ -37,6 +37,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    selected: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   setup(props, { emit: _emit }) {
@@ -65,7 +69,7 @@ export default defineComponent({
 .card {
   position: relative;
 }
-.hoverable:hover {
+.hoverable:hover, .selected {
   border-radius: 6px; // NOTE: works well only with DEFAULT_CARD_SCALE = 25!!!
                       // Explanation of Magic: SVG card images have its own border radius (12px). and their default
                       // sizes are 250px at width and 350px at height. applying high maths we get card ratio 5/7.

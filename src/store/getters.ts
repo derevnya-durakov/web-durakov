@@ -58,6 +58,11 @@ const getters: GetterTree<State, State> = {
     return playersCopy.filter(p => (p.user.id !== loggedInUser.id));
   },
 
+  firstCardToDefend: ({ gameState }: State, { iAmDefender }): Card | null => (((gameState !== null) && iAmDefender)
+    ? (gameState.round.filter(rp => (rp.defence === null))[0]?.attack || null)
+    : null
+  ),
+
 };
 
 export default getters;

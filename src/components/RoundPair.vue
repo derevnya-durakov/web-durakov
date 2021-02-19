@@ -3,7 +3,7 @@
     <card
       class="attack"
       :model="model.attack"
-      :hoverable="attackHoverable"
+      :selected="selected"
     />
     <card
       v-if="model.defence !== null"
@@ -54,6 +54,7 @@ export default defineComponent({
       defenceStyle: { top: `${_defenceTopOffset}px` },
       relativeContainerStyle: { width: `${_cardWidth.value}px`, height: `${_cardHeight.value + _defenceTopOffset}px` },
       attackHoverable: computed(() => (_store.getters.loggedIn && _store.getters.iAmDefender && (_model.value?.defence === null))),
+      selected: computed(() => (_model.value.attack === _store.getters.firstCardToDefend)),
     };
   },
 
