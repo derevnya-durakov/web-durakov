@@ -55,7 +55,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  background-color: #3f5c61;
+  background-color: #094c72;
 }
 
 #nav {
