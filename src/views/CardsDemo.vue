@@ -22,10 +22,10 @@
     </div>
     <flip style="margin: 0 auto;" :flipped="cardFlippedToFront">
       <template v-slot:front>
-        <card :model="frontCardModel" @click="flipBack"/>
+        <card :model="frontCardModel" :scale="cardScale" @click="flipBack"/>
       </template>
       <template v-slot:back>
-        <card :model="backCardModel" @click="flipBack"/>
+        <card :model="backCardModel" :scale="cardScale" @click="flipBack"/>
       </template>
     </flip>
     <button
@@ -61,6 +61,7 @@ export default defineComponent({
   setup() {
     const _flip = useFlip();
     return {
+      cardScale: 50,
       ..._flip,
       ...useHand(_flip.cardFlippedToFront, _flip.frontCardModel, _flip.backCardModel),
       suits,
