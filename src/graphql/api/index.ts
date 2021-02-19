@@ -78,7 +78,10 @@ export function useGetGameStateQuery(store: Store<State>) {
     store.commit(SET_GAME_STATE, value);
   });
   return {
-    getGameState: refetch as Function,
+    getGameState: refetch as Function,  // NOTE: we cast 'refetch' to Function (although the origianal type
+                                        // is Promise<...> which is not callable) to omit ts errors when using
+                                        // 'getGameState' ahh... stuff. anyway, 'console.log(getGameState)' prints
+                                        // a function
   };
 }
 
