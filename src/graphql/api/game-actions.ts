@@ -10,20 +10,25 @@ export function useAttackMutation(store: Store<State>) {
     gql`
       mutation attack($gameId: ID!, $attack: CardInput!) {
         attack(gameId: $gameId, card: $attack) {
-          round {
-            attack {
-              suit
-              rank
-            }
-            defence {
-              suit
-              rank
-            }
-          }
+          nonce
         }
       }
     `,
     { context: getContext(store.state.accessToken) },
   );
   return { attack };
+}
+
+export function useDefendMutation(store: Store<State>) {
+  const { mutate: defend } = useMutation(
+    gql`
+      mutation defend($gameId: ID!, $attack: CardInput!, $defence: CardInput!) {
+        defend(gameId: $gameId, attackCard: $attack, defenceCard: $defence) {
+          nonce
+        }
+      }
+    `,
+    { context: getContext(store.state.accessToken) },
+  );
+  return { defend };
 }

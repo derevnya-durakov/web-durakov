@@ -46,7 +46,7 @@ import HandDock from '@/components/HandDock.vue';
 import PlayerPanel from '@/components/PlayerPanel.vue';
 import RoundPair from '@/components/RoundPair.vue';
 import { ActionIcon } from '@/enums';
-import { useAttackMutation, useGameUpdatedSubscription, useGetGameStateQuery } from '@/graphql/api';
+import { useAttackMutation, useDefendMutation, useGameUpdatedSubscription, useGetGameStateQuery } from '@/graphql/api';
 import Card from '@/model/Card';
 import Player from '@/model/Player';
 import State from '@/store/State';
@@ -69,8 +69,12 @@ export default defineComponent({
     useGameUpdatedSubscription(_store, getGameState as any);
     const _attacker = computed(() => _store.getters.attacker);
     const _defender = computed(() => _store.getters.defender);
+    const _iAmAttacker = computed(() => _store.getters.iAmAttacker);
+    const _iAmDefender = computed(() => _store.getters.iAmDefender);
+    const _firstCardToDefend = computed(() => _store.getters.firstCardToDefend);
     const myPlayer = computed(() => _store.getters.myPlayer);
     const { attack: _attack } = useAttackMutation(_store);
+    const { defend: _defend } = useDefendMutation(_store);
     return {
       loggedIn: computed(() => _store.getters.loggedIn),
       loggedInUser: computed(() => _store.state.loggedInUser),
@@ -94,8 +98,14 @@ export default defineComponent({
         }
       },
       doGameAction(card: Card) {
-        if (myPlayer.value === _attacker.value) {
+        if (_iAmAttacker.value) {
           _attack({ gameId: _store.state.gameId, attack: { suit: card.suit, rank: card.rank } });
+        } else if (_iAmDefender.value) {
+          _defend({
+            gameId: _store.state.gameId,
+            attack: { suit: _firstCardToDefend.value.suit, rank: _firstCardToDefend.value.rank },
+            defence: { suit: card.suit, rank: card.rank },
+          });
         }
       },
       router: useRouter(),

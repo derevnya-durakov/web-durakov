@@ -107,4 +107,4 @@ export function useGameUpdatedSubscription(store: Store<State>, getGameState: Fu
   );
 }
 
-export { useAttackMutation } from '@/graphql/api/game-actions';
+export { useAttackMutation, useDefendMutation } from '@/graphql/api/game-actions';
