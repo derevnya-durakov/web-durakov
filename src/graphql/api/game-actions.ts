@@ -32,3 +32,17 @@ export function useDefendMutation(store: Store<State>) {
   );
   return { defend };
 }
+
+export function useSayBeatMutation(store: Store<State>) {
+  const { mutate: sayBeat } = useMutation(
+    gql`
+      mutation sayBeat($gameId: ID!) {
+        sayBeat(gameId: $gameId) {
+          nonce
+        }
+      }
+    `,
+    { context: getContext(store.state.accessToken) },
+  );
+  return { sayBeat };
+}

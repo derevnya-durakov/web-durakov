@@ -79,6 +79,13 @@ const getters: GetterTree<State, State> = {
     }
   },
 
+  anyCardOnTable: ({ gameState }: State) => ((gameState !== null) && (gameState.round.length > 0)),
+
+  allAttacksAreBeaten: ({ gameState }: State) => (
+    (gameState !== null)
+    && (gameState.round.filter(rp => (rp.defence === null)).length === 0)
+  ),
+
 };
 
 export default getters;

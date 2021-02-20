@@ -48,6 +48,7 @@ export function useGetGameStateQuery(store: Store<State>) {
           }
           players {
             handSize
+            saidBeat
             user {
               id
               nickname
@@ -107,4 +108,4 @@ export function useGameUpdatedSubscription(store: Store<State>, getGameState: Fu
   );
 }
 
-export { useAttackMutation, useDefendMutation } from '@/graphql/api/game-actions';
+export { useAttackMutation, useDefendMutation, useSayBeatMutation } from '@/graphql/api/game-actions';

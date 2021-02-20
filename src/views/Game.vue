@@ -22,16 +22,23 @@
       </div>
     </div>
     <div class="bottom-layout">
-      <player-panel
-        v-if="myPlayer !== null"
-        :model="myPlayer"
-        :action-icon="getActionIcon(myPlayer)"
-      />
-      <hand-dock
-        :cards="myHand"
-        :trump-suit="trumpSuit"
-        @card-click="doGameAction"
-      />
+      <div class="relative-container">
+        <div class="grid-container">
+          <player-panel
+            v-if="myPlayer !== null"
+            :model="myPlayer"
+            :action-icon="getActionIcon(myPlayer)"
+          />
+          <hand-dock
+            :cards="myHand"
+            :trump-suit="trumpSuit"
+            @card-click="doGameAction"
+          />
+        </div>
+        <div class="actions">
+          <button v-if="iCanSayBeat" @click="doSayBeat">Бито!</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -46,7 +53,13 @@ import HandDock from '@/components/HandDock.vue';
 import PlayerPanel from '@/components/PlayerPanel.vue';
 import RoundPair from '@/components/RoundPair.vue';
 import { ActionIcon } from '@/enums';
-import { useAttackMutation, useDefendMutation, useGameUpdatedSubscription, useGetGameStateQuery } from '@/graphql/api';
+import {
+  useAttackMutation,
+  useDefendMutation,
+  useGameUpdatedSubscription,
+  useGetGameStateQuery,
+  useSayBeatMutation,
+} from '@/graphql/api';
 import Card, { beats } from '@/model/Card';
 import Player from '@/model/Player';
 import State from '@/store/State';
@@ -73,9 +86,12 @@ export default defineComponent({
     const _iAmDefender = computed(() => _store.getters.iAmDefender);
     const _firstCardToDefend = computed(() => _store.getters.firstCardToDefend);
     const _availableRanksForAttack = computed(() => _store.getters.availableRanksForAttack);
+    const _anyCardOnTable = computed(() => _store.getters.anyCardOnTable);
+    const _allAttacksAreBeaten = computed(() => _store.getters.allAttacksAreBeaten);
     const myPlayer = computed(() => _store.getters.myPlayer);
     const { attack: _attack } = useAttackMutation(_store);
     const { defend: _defend } = useDefendMutation(_store);
+    const { sayBeat: _sayBeat } = useSayBeatMutation(_store);
     const _iCanAttackWith = (card: Card) => (
       (_availableRanksForAttack.value.length === 0)
       || _availableRanksForAttack.value.includes(card.rank)
@@ -95,6 +111,7 @@ export default defineComponent({
       lastTrump: computed(() => _store.state.gameState?.lastTrump || null),
       trumpSuit: computed(() => _store.state.gameState?.trumpSuit || null),
       round: computed(() => _store.state.gameState?.round || []),
+      iCanSayBeat: computed(() => (!_iAmDefender.value && _anyCardOnTable.value && _allAttacksAreBeaten.value)),
       navigateToLogin() {
         _router.push({ name: 'login' });
       },
@@ -121,6 +138,9 @@ export default defineComponent({
             });
           }
         }
+      },
+      doSayBeat() {
+        _sayBeat({ gameId: _store.state.gameId });
       },
       router: useRouter(),
     };
@@ -157,8 +177,20 @@ export default defineComponent({
   grid-template-columns: auto 300px;
 }
 .bottom-layout {
-  display: grid;
-  grid-template-columns: 230px auto;
+  .relative-container {
+    position: relative;
+    .grid-container {
+      display: grid;
+      grid-template-columns: 230px auto;
+    }
+    .actions {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      position: absolute;
+      top: -50px;
+    }
+  }
   position: absolute;
   bottom: 0%;
   width: 100%
