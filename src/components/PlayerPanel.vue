@@ -5,8 +5,9 @@
         <div class="avatar">
           <img class="icon" width="100" src="/img/avatar.png">
           <template v-if="actionIcon !== null">
-            <img class="action" :src="`/img/actions/${actionIcon}.png`">
+            <img class="action" width="40" :src="`/img/actions/${actionIcon}.png`">
           </template>
+          <img v-if="model.saidBeat" class="said-beat" width="40" src="/img/black-flag.png">
         </div>
         <div class="nickname">{{model.user.nickname}}</div>
       </div>
@@ -66,11 +67,15 @@ export default defineComponent({
     .icon {
       border-radius: 50%;
     }
-    .action {
+    .action, .said-beat {
       position: absolute;
-      top: 40px;
-      left: 55px;
-      transform: rotate(20deg);
+      top: -5px;
+    }
+    .action {
+      right: -5px;
+    }
+    .said-beat {
+      left: -5px;
     }
   }
   .nickname {

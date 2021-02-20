@@ -1,7 +1,11 @@
 import User from '@/model/User';
 
-export default class Player {
+export default interface Player {
 
-  constructor(readonly user: User, readonly handSize: number) {}
+  user: User;
+
+  handSize: number;
+
+  saidBeat: boolean;
 
 }
