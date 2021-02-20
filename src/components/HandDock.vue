@@ -105,7 +105,7 @@ export default defineComponent({
       z-index: auto;
       transition: transform 0.1s;
       &:hover {
-        transform: translate(0, -30px);
+        transform: translate(0, -10px);
       }
     }
   }
