@@ -159,6 +159,10 @@ export default defineComponent({
               defence: { suit: card.suit, rank: card.rank },
             });
           }
+        } else {
+          if (_anyCardOnTable.value && _iCanAttackWith(card)) {
+            _attack({ gameId: _store.state.gameId, attack: { suit: card.suit, rank: card.rank } });
+          }
         }
       },
       doSayBeat() {
