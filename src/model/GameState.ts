@@ -25,4 +25,6 @@ export default interface GameState {
 
   defendingId: string;
 
+  isTaking: boolean;
+
 }

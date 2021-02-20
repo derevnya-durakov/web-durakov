@@ -65,6 +65,7 @@ export function useGetGameStateQuery(store: Store<State>) {
             }
           }
           defendingId
+          isTaking
         }
       }
     `,
@@ -108,4 +109,4 @@ export function useGameUpdatedSubscription(store: Store<State>, getGameState: Fu
   );
 }
 
-export { useAttackMutation, useDefendMutation, useSayBeatMutation } from '@/graphql/api/game-actions';
+export { useAttackMutation, useDefendMutation, useSayBeatMutation, useTakeMutation } from '@/graphql/api/game-actions';

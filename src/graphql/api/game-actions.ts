@@ -46,3 +46,17 @@ export function useSayBeatMutation(store: Store<State>) {
   );
   return { sayBeat };
 }
+
+export function useTakeMutation(store: Store<State>) {
+  const { mutate: take } = useMutation(
+    gql`
+      mutation take($gameId: ID!) {
+        take(gameId: $gameId) {
+          nonce
+        }
+      }
+    `,
+    { context: getContext(store.state.accessToken) },
+  );
+  return { take };
+}

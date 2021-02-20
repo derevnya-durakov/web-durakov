@@ -8,6 +8,7 @@
             <img class="action" width="40" :src="`/img/actions/${actionIcon}.png`">
           </template>
           <img v-if="model.saidBeat" class="said-beat" width="40" src="/img/black-flag.png">
+          <img v-else-if="isTaking" class="said-beat" width="40" src="/img/white-flag.png">
         </div>
         <div class="nickname">{{model.user.nickname}}</div>
       </div>
@@ -44,6 +45,10 @@ export default defineComponent({
     actionIcon: {
       type: String,
       default: null,
+    },
+    isTaking: {
+      type: Boolean,
+      defalut: false,
     },
   },
 

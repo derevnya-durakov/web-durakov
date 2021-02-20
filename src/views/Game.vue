@@ -6,6 +6,7 @@
         :key="opponent.user.id"
         :model="opponent"
         :action-icon="getActionIcon(opponent)"
+        :is-taking="isTaking(opponent)"
       />
     </div>
     <div class="middle-layout">
@@ -28,6 +29,7 @@
             v-if="myPlayer !== null"
             :model="myPlayer"
             :action-icon="getActionIcon(myPlayer)"
+            :is-taking="isTaking(myPlayer)"
           />
           <hand-dock
             :cards="myHand"
@@ -37,6 +39,8 @@
         </div>
         <div class="actions">
           <button v-if="iCanSayBeat" @click="doSayBeat">Бито!</button>
+          <button v-if="iCanTake" @click="doTake">Беру!</button>
+          <button v-if="iCanRelease" @click="doRelease">Бери!</button>
         </div>
       </div>
     </div>
@@ -59,6 +63,7 @@ import {
   useGameUpdatedSubscription,
   useGetGameStateQuery,
   useSayBeatMutation,
+  useTakeMutation,
 } from '@/graphql/api';
 import Card, { beats } from '@/model/Card';
 import Player from '@/model/Player';
@@ -92,6 +97,7 @@ export default defineComponent({
     const { attack: _attack } = useAttackMutation(_store);
     const { defend: _defend } = useDefendMutation(_store);
     const { sayBeat: _sayBeat } = useSayBeatMutation(_store);
+    const { take: _take } = useTakeMutation(_store);
     const _iCanAttackWith = (card: Card) => (
       (_availableRanksForAttack.value.length === 0)
       || _availableRanksForAttack.value.includes(card.rank)
@@ -101,6 +107,7 @@ export default defineComponent({
       && (_firstCardToDefend.value !== null)
       && beats(card, _firstCardToDefend.value, _store.state.gameState.trumpSuit)
     );
+    const _isTaking = computed(() => (_store.state.gameState?.isTaking || false));
     return {
       loggedIn: computed(() => _store.getters.loggedIn),
       loggedInUser: computed(() => _store.state.loggedInUser),
@@ -116,6 +123,16 @@ export default defineComponent({
         && (!myPlayer.value?.saidBeat || false)
         && _anyCardOnTable.value
         && _allAttacksAreBeaten.value
+      )),
+      iCanTake: computed(() => (
+        _iAmDefender.value
+        && !_isTaking.value
+        && !_allAttacksAreBeaten.value
+      )),
+      iCanRelease: computed(() => (
+        (_store.state.gameState?.isTaking || false)
+        && !_iAmDefender.value
+        && (!myPlayer.value?.saidBeat || false)
       )),
       navigateToLogin() {
         _router.push({ name: 'login' });
@@ -146,6 +163,18 @@ export default defineComponent({
       },
       doSayBeat() {
         _sayBeat({ gameId: _store.state.gameId });
+      },
+      doTake() {
+        _take({ gameId: _store.state.gameId });
+      },
+      doRelease() {
+        _sayBeat({ gameId: _store.state.gameId });
+      },
+      isTaking(player: Player) {
+        if (!_store.state.gameState?.isTaking || false) {
+          return false;
+        }
+        return (player.user.id === _defender.value.user.id);
       },
       router: useRouter(),
     };
