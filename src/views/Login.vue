@@ -1,5 +1,10 @@
 <template>
-  <input v-model="nickname" type="text">
+  <input
+    ref="nicknameInput"
+    v-model="nickname"
+    type="text"
+    @keyup.enter="login"
+  >
   <button @click="login">Login</button>
   <query-get-access-token
     v-if="committedNickname"
@@ -59,6 +64,10 @@ export default defineComponent({
     if (this.loggedIn) {
       this.navigateToGame();
     }
+  },
+
+  mounted() {
+    (this.$refs.nicknameInput as HTMLInputElement).focus();
   },
 
 });
