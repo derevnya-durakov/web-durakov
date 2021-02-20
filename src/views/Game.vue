@@ -111,7 +111,12 @@ export default defineComponent({
       lastTrump: computed(() => _store.state.gameState?.lastTrump || null),
       trumpSuit: computed(() => _store.state.gameState?.trumpSuit || null),
       round: computed(() => _store.state.gameState?.round || []),
-      iCanSayBeat: computed(() => (!_iAmDefender.value && _anyCardOnTable.value && _allAttacksAreBeaten.value)),
+      iCanSayBeat: computed(() => (
+        !_iAmDefender.value
+        && (!myPlayer.value?.saidBeat || false)
+        && _anyCardOnTable.value
+        && _allAttacksAreBeaten.value
+      )),
       navigateToLogin() {
         _router.push({ name: 'login' });
       },
