@@ -81,10 +81,10 @@ export default defineComponent({
   },
 
   setup() {
-    const _router = useRouter();
     const _store = useStore<State>();
-    const { getGameState } = useGetGameStateQuery(_store);
-    useGameUpdatedSubscription(_store, getGameState as any);
+    useGetGameStateQuery(_store);
+    useGameUpdatedSubscription(_store);
+    const _router = useRouter();
     const _attacker = computed(() => _store.getters.attacker);
     const _defender = computed(() => _store.getters.defender);
     const _iAmAttacker = computed(() => _store.getters.iAmAttacker);
@@ -138,9 +138,9 @@ export default defineComponent({
         _router.push({ name: 'login' });
       },
       getActionIcon(player: Player): ActionIcon | null {
-        if (player === _attacker.value) {
+        if (player.user.id === _attacker.value.user.id) {
           return ActionIcon.Attack;
-        } else if (player === _defender.value) {
+        } else if (player.user.id === _defender.value.user.id) {
           return ActionIcon.Defence;
         } else {
           return null;
