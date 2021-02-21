@@ -23,7 +23,11 @@ export default interface GameState {
 
   round: RoundPair[];
 
-  defendingId: string;
+  attacker: Player;
+
+  defender: Player;
+
+  durak: Player | null;
 
   isTaking: boolean;
 

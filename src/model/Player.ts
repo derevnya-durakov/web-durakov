@@ -8,4 +8,6 @@ export default interface Player {
 
   saidBeat: boolean;
 
+  done: number | null;
+
 }

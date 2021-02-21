@@ -15,40 +15,32 @@ const getters: GetterTree<State, State> = {
     return ((gameState !== null) ? gameState.hand : []);
   },
 
-  attacker({ gameState }: State): Player | null {
-    if (gameState === null) {
-      return null;
-    }
-    const { players, defendingId } = gameState;
-    const defenderIndex = players.findIndex(p => (p.user.id === defendingId));
-    if (defenderIndex === -1) {
-      throw new Error('cannot find player');
-    }
-    const shift = defenderIndex - 1;  // attacker places before defender
-    if (shift === -1) {
-      return players[players.length - 1];
-    }
-    return players[shift];
-  },
+  attacker: ({ gameState }: State) => (((gameState !== null) && gameState.attacker) || null),
 
-  defender: ({ gameState }: State) => ((gameState !== null)
-    ? gameState.players.find(p => (p.user.id === gameState.defendingId))
-    : null
-  ),
+  defender: ({ gameState }: State) => (((gameState !== null) && gameState.defender) || null),
 
   myPlayer: ({ loggedInUser, gameState }: State) => (((loggedInUser !== null) && (gameState !== null))
     ? (gameState.players.find(p => (p.user.id === loggedInUser.id)) || null)
     : null
   ),
 
-  iAmAttacker: (_, { attacker, myPlayer }) => (((attacker !== null) && (myPlayer !== null)) && (attacker === myPlayer)),
+  iAmAttacker: (_, { attacker, myPlayer }) => (
+    (attacker !== null)
+    && (myPlayer !== null)
+    && (attacker.user.id === myPlayer.user.id)
+  ),
 
-  iAmDefender: (_, { defender, myPlayer }) => (((defender !== null) && (myPlayer !== null)) && (defender === myPlayer)),
+  iAmDefender: (_, { defender, myPlayer }) => (
+    (defender !== null)
+    && (myPlayer !== null)
+    && (defender.user.id === myPlayer.user.id)
+  ),
 
   opponents({ loggedInUser, gameState }: State): Player[] {
     if ((loggedInUser === null) || (gameState === null)) {
       return [];
     }
+    console.log(gameState);
     const { players } = gameState;
     const myIndex = players.findIndex(p => (p.user.id === loggedInUser.id));
     if (myIndex === -1) {

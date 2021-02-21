@@ -1,10 +1,9 @@
 import { MutationTree } from 'vuex';
 
-import { ADD_USER, SET_ACCESS_TOKEN, SET_GAME_STATE, SET_LOGGED_IN_USER, SET_USERS } from '@/store/mutation-types';
-import State from '@/store/State';
-
 import GameState from '@/model/GameState';
 import User from '@/model/User';
+import { ADD_USER, SET_ACCESS_TOKEN, SET_GAME_STATE, SET_LOGGED_IN_USER, SET_USERS } from '@/store/mutation-types';
+import State from '@/store/State';
 
 const mutations: MutationTree<State> = {
 
@@ -25,6 +24,7 @@ const mutations: MutationTree<State> = {
   },
 
   [SET_GAME_STATE](state: State, gameState: GameState): void {
+    console.log('setting game state...');
     state.gameState = gameState;
   },
 
