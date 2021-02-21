@@ -5,13 +5,8 @@
         v-for="(card, index) in sortedCards"
         :key="index"
         class="grid-column"
-        :style="{ 'z-index': index + 1 }"
       >
-        <card
-          :model="card"
-          :width="5 * scale"
-          :height="7 * scale"
-        />
+        <card :model="card" @card-click="emitCardClick"/>
       </div>
     </div>
   </div>
@@ -21,8 +16,10 @@
 import { computed, defineComponent, Ref, toRef } from 'vue';
 
 import Card from '@/components/Card.vue';
-import { Suit, Rank } from '@/enums';
-import CardModel from '@/models/Card';
+import { DEFAULT_CARD_SCALE, EVENT_CARD_CLICK } from '@/constants';
+import { Suit, Rank, rankValue } from '@/enums';
+import CardModel from '@/model/Card';
+import { useCardSize } from '@/playing-card-composable';
 
 export default defineComponent({
 
@@ -31,6 +28,8 @@ export default defineComponent({
   components: {
     Card,
   },
+
+  emits: [ EVENT_CARD_CLICK ],
 
   props: {
     cards: {
@@ -49,14 +48,19 @@ export default defineComponent({
       type: String,
       default: Suit.Hearts,
     },
+    cardScale: {
+      type: Number,
+      default: DEFAULT_CARD_SCALE,
+    },
   },
 
-  setup(props) {
+  setup(props, { emit: _emit }) {
     const _cards = toRef(props, 'cards') as Ref<CardModel[]>;
     const _trumpSuit = toRef(props, 'trumpSuit') as Ref<Suit>;
+    const _cardScale = toRef(props, 'cardScale') as Ref<number>;
+    const { width: _cardWidth } = useCardSize(_cardScale);
+    const maxGap = 5;
     return {
-      scale: 25,
-      maxGap: 5,
       sortedCards: computed(() => {
         const toSort = [ ..._cards.value ];
         toSort.sort((card1, card2) => {
@@ -69,22 +73,22 @@ export default defineComponent({
                 : card1.suit.localeCompare(card2.suit))));
           return ((suitComparation !== 0)
             ? suitComparation
-            : ((card1.rank > card2.rank)
+            : ((rankValue(card1.rank) > rankValue(card2.rank))
               ? -1
-              : ((card1.rank < card2.rank) ? 1 : 0)));
+              : ((rankValue(card1.rank) < rankValue(card2.rank))
+                ? 1
+                : 0)));
         });
         return toSort;
       }),
-    };
-  },
-
-  computed: {
-    gridTemplateColumns(): string {
-      return ((this.cards.length > 0)
-        ? `repeat(${this.cards.length - 1}, minmax(1px, ${5 * this.scale + this.maxGap}px)) ${5 * this.scale}px`
+      gridTemplateColumns: computed(() => ((_cards.value.length > 0)
+        ? `repeat(${_cards.value.length - 1}, minmax(1px, ${_cardWidth.value + maxGap}px)) ${_cardWidth.value}px`
         : '1fr'
-      );
-    }
+      )),
+      emitCardClick(card: CardModel) {
+        _emit(EVENT_CARD_CLICK, card);
+      },
+    };
   },
 
 });
@@ -98,9 +102,10 @@ export default defineComponent({
     display: grid;
     .grid-column {
       justify-self: start;
+      z-index: auto;
       transition: transform 0.1s;
       &:hover {
-        transform: translate(0, -30px);
+        transform: translate(0, -10px);
       }
     }
   }
