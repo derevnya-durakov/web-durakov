@@ -93,7 +93,7 @@ export default defineComponent({
     const _availableRanksForAttack = computed(() => _store.getters.availableRanksForAttack);
     const _anyCardOnTable = computed(() => _store.getters.anyCardOnTable);
     const _allAttacksAreBeaten = computed(() => _store.getters.allAttacksAreBeaten);
-    const myPlayer = computed(() => _store.getters.myPlayer);
+    const myPlayer = computed(() => _store.getters.myPlayer as Player | null);
     const { attack: _attack } = useAttackMutation(_store);
     const { defend: _defend } = useDefendMutation(_store);
     const { sayBeat: _sayBeat } = useSayBeatMutation(_store);
@@ -132,7 +132,9 @@ export default defineComponent({
       iCanRelease: computed(() => (
         (_store.state.gameState?.isTaking || false)
         && !_iAmDefender.value
-        && (!myPlayer.value?.saidBeat || false)
+        && (myPlayer.value !== null)
+        && (!myPlayer.value.saidBeat || false)
+        && (myPlayer.value.handSize > 0)
       )),
       navigateToLogin() {
         _router.push({ name: 'login' });
