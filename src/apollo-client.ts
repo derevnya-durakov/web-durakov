@@ -11,7 +11,9 @@ export const xAuthToken = ref<string | null>(null);
 const httpUri = process.env.VUE_APP_GRAPHQL_URI_HTTP;
 const httpLink = new HttpLink({ uri: httpUri });
 
-function resolveWithValueNotNull(resolve: (value?: ConnectionParams) => void) {
+type ResolveConnectionParamsPromiseFunction = (value: ConnectionParams) => void;
+
+function resolveWithValueNotNull(resolve: ResolveConnectionParamsPromiseFunction) {
   return (value: string | null) => {
     if (value !== null) {
       resolve(getContext(value));
