@@ -11,3 +11,7 @@ export default interface Player {
   done: number | null;
 
 }
+
+export function playersEqual(one: Player, another: Player): boolean {
+  return (one.user.id === another.user.id);
+}

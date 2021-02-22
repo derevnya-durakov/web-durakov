@@ -2,7 +2,7 @@ import { GetterTree } from 'vuex';
 
 import { Rank } from '@/enums';
 import Card from '@/model/Card';
-import Player from '@/model/Player';
+import Player, { playersEqual } from '@/model/Player';
 import State from '@/store/State';
 
 const getters: GetterTree<State, State> = {
@@ -15,25 +15,42 @@ const getters: GetterTree<State, State> = {
     return ((gameState !== null) ? gameState.hand : []);
   },
 
-  attacker: ({ gameState }: State) => (((gameState !== null) && gameState.attacker) || null),
-
-  defender: ({ gameState }: State) => (((gameState !== null) && gameState.defender) || null),
-
   myPlayer: ({ loggedInUser, gameState }: State) => (((loggedInUser !== null) && (gameState !== null))
     ? (gameState.players.find(p => (p.user.id === loggedInUser.id)) || null)
     : null
   ),
 
-  iAmAttacker: (_, { attacker, myPlayer }) => (
-    (attacker !== null)
+  iAmAttacker: ({ gameState }, { myPlayer }) => (
+    (gameState !== null)
     && (myPlayer !== null)
-    && (attacker.user.id === myPlayer.user.id)
+    && playersEqual(gameState.attacker, myPlayer)
   ),
 
-  iAmDefender: (_, { defender, myPlayer }) => (
-    (defender !== null)
+  iAmDefender: ({ gameState }, { myPlayer }) => (
+    (gameState !== null)
     && (myPlayer !== null)
-    && (defender.user.id === myPlayer.user.id)
+    && playersEqual(gameState.defender, myPlayer)
+  ),
+
+  iCanSayBeat: (_, { allAttacksAreBeaten, anyCardOnTable, iAmDefender, myPlayer }) => (
+    !iAmDefender.value
+    && (!myPlayer.value?.saidBeat || false)
+    && anyCardOnTable.value
+    && allAttacksAreBeaten.value
+  ),
+
+  iCanRelease: ({ gameState }, { iAmDefender, myPlayer }) => (
+    (gameState?.isTaking || false)
+    && !iAmDefender.value
+    && (myPlayer.value !== null)
+    && (!myPlayer.value.saidBeat || false)
+    && (myPlayer.value.handSize > 0)
+  ),
+
+  iCanTake: ({ gameState }, { allAttacksAreBeaten, iAmDefender }) => (
+    !(gameState?.isTaking || false)
+    && iAmDefender.value
+    && !allAttacksAreBeaten.value
   ),
 
   opponents({ loggedInUser, gameState }: State): Player[] {
