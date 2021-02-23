@@ -33,24 +33,24 @@ const getters: GetterTree<State, State> = {
   ),
 
   iCanSayBeat: (_, { allAttacksAreBeaten, anyCardOnTable, iAmDefender, myPlayer }) => (
-    !iAmDefender.value
-    && (!myPlayer.value?.saidBeat || false)
-    && anyCardOnTable.value
-    && allAttacksAreBeaten.value
+    !iAmDefender
+    && ((myPlayer !== null) && !myPlayer.saidBeat)
+    && anyCardOnTable
+    && allAttacksAreBeaten
   ),
 
   iCanRelease: ({ gameState }, { iAmDefender, myPlayer }) => (
     (gameState?.isTaking || false)
-    && !iAmDefender.value
-    && (myPlayer.value !== null)
-    && (!myPlayer.value.saidBeat || false)
-    && (myPlayer.value.handSize > 0)
+    && !iAmDefender
+    && (myPlayer !== null)
+    && (!myPlayer.saidBeat || false)
+    && (myPlayer.handSize > 0)
   ),
 
   iCanTake: ({ gameState }, { allAttacksAreBeaten, iAmDefender }) => (
     !(gameState?.isTaking || false)
-    && iAmDefender.value
-    && !allAttacksAreBeaten.value
+    && iAmDefender
+    && !allAttacksAreBeaten
   ),
 
   opponents({ loggedInUser, gameState }: State): Player[] {
