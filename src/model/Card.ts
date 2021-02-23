@@ -1,4 +1,4 @@
-import { Suit, Rank, rankValue } from '@/enums';
+import { Suit, Rank, rankValue } from '@/domain';
 
 export default class Card {
 

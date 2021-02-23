@@ -44,7 +44,7 @@ import { defineComponent } from 'vue';
 import Card from '@/components/Card.vue';
 import Flip from '@/components/Flip.vue';
 import HandDock from '@/components/HandDock.vue';
-import { suits, suitSymbol, ranks, rankTitle } from '@/enums';
+import { suits, suitSymbol, ranks, rankTitle } from '@/domain';
 import { useHand } from '@/views/hand-composable';
 import { useFlip } from '@/views/flip-composable';
 

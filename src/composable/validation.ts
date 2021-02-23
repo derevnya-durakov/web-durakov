@@ -1,7 +1,7 @@
 import { ComputedRef, computed } from 'vue';
 import { Store } from 'vuex';
 
-import { Rank } from '@/enums';
+import { Rank } from '@/domain';
 import Card, { beats } from '@/model/Card';
 import Player, { playersEqual } from '@/model/Player';
 import State from '@/store/State';

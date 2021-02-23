@@ -17,7 +17,7 @@ import { computed, defineComponent, Ref, toRef } from 'vue';
 
 import Card from '@/components/Card.vue';
 import { DEFAULT_CARD_SCALE, EVENT_CARD_CLICK } from '@/constants';
-import { Suit, Rank, rankValue } from '@/enums';
+import { Suit, Rank, rankValue } from '@/domain';
 import CardModel from '@/model/Card';
 import { useCardSize } from '@/playing-card-composable';
 

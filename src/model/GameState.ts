@@ -1,4 +1,4 @@
-import { Suit } from '@/enums';
+import { Suit } from '@/domain';
 import Card from '@/model/Card';
 import Player from '@/model/Player';
 import RoundPair from '@/model/RoundPair';
