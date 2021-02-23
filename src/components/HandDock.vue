@@ -18,7 +18,7 @@ import { computed, defineComponent, Ref, toRef } from 'vue';
 import Card from '@/components/Card.vue';
 import { DEFAULT_CARD_SCALE, EVENT_CARD_CLICK } from '@/constants';
 import { Card as CardModel, Suit, Rank, rankValue } from '@/domain';
-import { useCardSize } from '@/playing-card-composable';
+import { useCardSize } from '@/composable/playing-cards';
 
 export default defineComponent({
 

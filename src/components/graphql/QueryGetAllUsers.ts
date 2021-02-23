@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 import { defineComponent, watch } from 'vue';
 import { useStore } from 'vuex';
 
-import { getContext } from '@/graphql/api';
+import { getContext } from '@/composable/graphql';
 import { SET_USERS } from '@/store/mutation-types';
 import State from '@/store/State';
 

@@ -57,4 +57,4 @@ export function useGameUpdatedSubscription({ commit, state }: Store<State>) {
   );
 }
 
-export { useAttackMutation, useDefendMutation, useSayBeatMutation, useTakeMutation } from '@/graphql/api/game-actions';
+export { useAttackMutation, useDefendMutation, useSayBeatMutation, useTakeMutation } from '@/composable/graphql/game-actions';

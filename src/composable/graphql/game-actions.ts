@@ -2,7 +2,7 @@ import { useMutation } from '@vue/apollo-composable';
 import { DocumentNode } from 'graphql';
 import { Store } from 'vuex';
 
-import { getContext } from '@/graphql/api';
+import { getContext } from '@/composable/graphql';
 
 import {
   GRAPHQL_MUTATION_ATTACK,

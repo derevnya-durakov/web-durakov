@@ -68,7 +68,7 @@ import {
   useGetGameStateQuery,
   useSayBeatMutation,
   useTakeMutation,
-} from '@/graphql/api';
+} from '@/composable/graphql';
 
 import { Player, playersEqual } from '@/domain';
 import State from '@/store/State';

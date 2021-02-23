@@ -4,7 +4,7 @@ import { getMainDefinition } from '@apollo/client/utilities';
 import { ConnectionParams } from 'subscriptions-transport-ws';
 import { ref, watch } from 'vue';
 
-import { getContext } from '@/graphql/api';
+import { getContext } from '@/composable/graphql';
 
 export const xAuthToken = ref<string | null>(null);
 

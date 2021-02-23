@@ -45,8 +45,8 @@ import Card from '@/components/Card.vue';
 import Flip from '@/components/Flip.vue';
 import HandDock from '@/components/HandDock.vue';
 import { suits, suitSymbol, ranks, rankTitle } from '@/domain';
-import { useHand } from '@/views/hand-composable';
-import { useFlip } from '@/views/flip-composable';
+import { useFlip } from '@/composable/card-flip';
+import { useHand } from '@/composable/hand';
 
 export default defineComponent({
 

@@ -21,8 +21,8 @@ import { computed, defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
-import QueryAuthenticate from '@/graphql/components/QueryAuthenticate';
-import QueryGetAccessToken from '@/graphql/components/QueryGetAccessToken';
+import QueryAuthenticate from '@/components/graphql/QueryAuthenticate';
+import QueryGetAccessToken from '@/components/graphql/QueryGetAccessToken';
 import State from '@/store/State';
 
 export default defineComponent({

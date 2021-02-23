@@ -17,7 +17,7 @@ import { computed, defineComponent, Ref, toRef } from 'vue';
 
 import Card from '@/components/Card.vue';
 import { DEFAULT_CARD_SCALE } from '@/constants';
-import { useCardSize } from '@/playing-card-composable';
+import { useCardSize } from '@/composable/playing-cards';
 
 export default defineComponent({
 

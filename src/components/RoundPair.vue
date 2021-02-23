@@ -21,7 +21,7 @@ import { useStore } from 'vuex';
 import Card from '@/components/Card.vue';
 import { DEFAULT_CARD_SCALE } from '@/constants';
 import State from '@/store/State';
-import { useCardSize } from '@/playing-card-composable';
+import { useCardSize } from '@/composable/playing-cards';
 
 export default defineComponent({
 

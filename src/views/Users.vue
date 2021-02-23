@@ -13,9 +13,9 @@ import { computed, defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
-import { useAddUserMutation } from '@/graphql/api';
-import QueryGetAllUsers from '@/graphql/components/QueryGetAllUsers';
-import SubscriptionUsersUpdated from '@/graphql/components/SubscriptionUsersUpdated';
+import QueryGetAllUsers from '@/components/graphql/QueryGetAllUsers';
+import SubscriptionUsersUpdated from '@/components/graphql/SubscriptionUsersUpdated';
+import { useAddUserMutation } from '@/composable/graphql';
 import State from '@/store/State';
 
 export default defineComponent({
