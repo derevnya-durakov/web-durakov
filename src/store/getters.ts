@@ -55,7 +55,6 @@ const getters: GetterTree<State, State> = {
     if ((loggedInUser === null) || (gameState === null)) {
       return [];
     }
-    console.log(gameState);
     const { players } = gameState;
     const myIndex = players.findIndex(p => (p.user.id === loggedInUser.id));
     if (myIndex === -1) {
