@@ -1,5 +1,4 @@
-import GameState from '@/model/GameState';
-import User from '@/model/User';
+import { GameState, User } from '@/domain';
 
 export default class State {
 

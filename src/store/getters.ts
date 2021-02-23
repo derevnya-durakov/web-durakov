@@ -1,8 +1,6 @@
 import { GetterTree } from 'vuex';
 
-import { Rank } from '@/domain';
-import Card from '@/model/Card';
-import Player, { playersEqual } from '@/model/Player';
+import { Card, Player, playersEqual, Rank } from '@/domain';
 import State from '@/store/State';
 
 const getters: GetterTree<State, State> = {

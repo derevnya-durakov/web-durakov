@@ -1,6 +1,6 @@
 import { Ref, ref } from 'vue';
 
-import Card from '@/model/Card';
+import { Card } from '@/domain';
 
 export function useHand(
   cardFlippedToFront: Ref<boolean>,

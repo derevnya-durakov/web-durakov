@@ -1,7 +1,6 @@
 import { MutationTree } from 'vuex';
 
-import GameState from '@/model/GameState';
-import User from '@/model/User';
+import { GameState, User } from '@/domain';
 import { ADD_USER, SET_ACCESS_TOKEN, SET_GAME_STATE, SET_LOGGED_IN_USER, SET_USERS } from '@/store/mutation-types';
 import State from '@/store/State';
 

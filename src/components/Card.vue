@@ -15,7 +15,7 @@
 import { computed, defineComponent, Ref, toRef } from 'vue';
 
 import { DEFAULT_CARD_SCALE, EVENT_CARD_CLICK } from '@/constants';
-import CardModel from '@/model/Card';
+import { Card } from '@/domain';
 import { useCardSize } from '@/playing-card-composable';
 
 export default defineComponent({
@@ -44,7 +44,7 @@ export default defineComponent({
   },
 
   setup(props, { emit: _emit }) {
-    const _model = toRef(props, 'model') as Ref<CardModel | null>;
+    const _model = toRef(props, 'model') as Ref<Card | null>;
     const _scale = toRef(props, 'scale') as Ref<number>;
     const { width, height } = useCardSize(_scale);
     return {

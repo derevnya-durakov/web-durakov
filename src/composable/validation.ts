@@ -1,9 +1,7 @@
 import { ComputedRef, computed } from 'vue';
 import { Store } from 'vuex';
 
-import { Rank } from '@/domain';
-import Card, { beats } from '@/model/Card';
-import Player, { playersEqual } from '@/model/Player';
+import { beats, Card, Player, playersEqual, Rank } from '@/domain';
 import State from '@/store/State';
 
 export function useValidation(

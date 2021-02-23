@@ -11,7 +11,7 @@ import {
   GRAPHQL_MUTATION_TAKE,
 } from '@/graphql/mutations';
 
-import GameState from '@/model/GameState';
+import { GameState } from '@/domain';
 import { SET_GAME_STATE } from '@/store/mutation-types';
 import State from '@/store/State';
 

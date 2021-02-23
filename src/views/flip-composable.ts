@@ -1,7 +1,6 @@
 import { ComputedRef, computed, Ref, ref } from 'vue';
 
-import { Rank, Suit } from '@/domain';
-import Card from '@/model/Card';
+import { Card, Rank, Suit } from '@/domain';
 
 interface ComposedCard {
   suit: Ref<Suit | null>;

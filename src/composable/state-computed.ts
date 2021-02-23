@@ -1,9 +1,7 @@
 import { computed } from 'vue';
 import { Store } from 'vuex';
 
-import Card from '@/model/Card';
-import Player from '@/model/Player';
-import User from '@/model/User';
+import { Card, Player, User } from '@/domain';
 import State from '@/store/State';
 
 export function useAuthComputed({ getters, state }: Store<State>) {

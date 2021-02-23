@@ -2,7 +2,7 @@ import { MutateFunction } from '@vue/apollo-composable';
 import { ComputedRef } from 'vue';
 import { Store } from 'vuex';
 
-import Card from '@/model/Card';
+import { Card } from '@/domain';
 import State from '@/store/State';
 
 export function useGameActions(

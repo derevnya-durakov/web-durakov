@@ -70,7 +70,7 @@ import {
   useTakeMutation,
 } from '@/graphql/api';
 
-import Player, { playersEqual } from '@/model/Player';
+import { Player, playersEqual } from '@/domain';
 import State from '@/store/State';
 
 export default defineComponent({
