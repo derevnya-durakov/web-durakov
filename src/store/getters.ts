@@ -51,6 +51,8 @@ const getters: GetterTree<State, State> = {
     && !allAttacksAreBeaten
   ),
 
+  gameIsEnd: ({ gameState }) => ((gameState !== null) && (gameState.durak !== null)),
+
   opponents({ loggedInUser, gameState }: State): Player[] {
     if ((loggedInUser === null) || (gameState === null)) {
       return [];
@@ -65,6 +67,30 @@ const getters: GetterTree<State, State> = {
       playersCopy.push(playersCopy.shift() as Player);
     }
     return playersCopy.filter(p => (p.user.id !== loggedInUser.id));
+  },
+
+  donePlayers({ gameState }: State): Player[] {
+    if (gameState === null) {
+      return [];
+    }
+    const { players } = gameState;
+    const playersCopy = [ ...players ];
+    playersCopy.sort((p1, p2) => {
+      if ((p1.done !== null) && (p2.done !== null)) {
+        return ((p1.done > p2.done)
+          ? 1
+          : ((p1.done < p2.done)
+            ? -1
+            : 0));
+      } else if (p1.done === null) {
+        return 1;
+      } else if (p2.done === null) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+    return playersCopy;
   },
 
   firstCardToDefend: ({ gameState }: State, { iAmDefender }): Card | null => (((gameState !== null) && iAmDefender)

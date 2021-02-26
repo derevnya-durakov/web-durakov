@@ -21,7 +21,9 @@ export function useGameStateComputed({ getters, state }: Store<State>) {
     myHand: computed(() => getters.myHand as Card[]),
     myPlayer: computed(() => getters.myPlayer as Player | null),
     opponents: computed(() => getters.opponents as Player[]),
+    donePlayers: computed(() => getters.donePlayers as Player[]),
     round: computed(() => (state.gameState?.round || [])),
     trumpSuit: computed(() => (state.gameState?.trumpSuit || null)),
+    durak: computed(() => (state.gameState?.durak || null)),
   };
 }

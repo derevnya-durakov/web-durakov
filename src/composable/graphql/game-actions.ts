@@ -7,6 +7,7 @@ import { getContext } from '@/composable/graphql';
 import {
   GRAPHQL_MUTATION_ATTACK,
   GRAPHQL_MUTATION_DEFEND,
+  GRAPHQL_MUTATION_NEXT_GAME,
   GRAPHQL_MUTATION_SAY_BEAT,
   GRAPHQL_MUTATION_TAKE,
 } from '@/graphql/mutations';
@@ -40,4 +41,8 @@ export function useSayBeatMutation(store: Store<State>) {
 
 export function useTakeMutation(store: Store<State>) {
   return { take: _makeGameActionMutation(store, GRAPHQL_MUTATION_TAKE, data => data.take as GameState) };
+}
+
+export function useNextGameMutation(store: Store<State>) {
+  return { nextGame: _makeGameActionMutation(store, GRAPHQL_MUTATION_NEXT_GAME, data => data.nextGame as GameState) };
 }

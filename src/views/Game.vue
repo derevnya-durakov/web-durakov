@@ -45,6 +45,11 @@
       </div>
     </div>
   </div>
+  <div v-if="gameIsEnd" class="overlay">
+    <div class="overlay-text">
+      <game-results/>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -53,6 +58,7 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
 import CardDeck from '@/components/CardDeck.vue';
+import GameResults from '@/components/GameResults.vue';
 import HandDock from '@/components/HandDock.vue';
 import PlayerPanel from '@/components/PlayerPanel.vue';
 import RoundPair from '@/components/RoundPair.vue';
@@ -79,6 +85,7 @@ export default defineComponent({
 
   components: {
     CardDeck,
+    GameResults,
     HandDock,
     PlayerPanel,
     RoundPair,
@@ -105,6 +112,7 @@ export default defineComponent({
 
     const {
       anyCardOnTable: _anyCardOnTable,
+      gameIsEnd,
       iAmAttacker: _iAmAttacker,
       iAmDefender: _iAmDefender,
       iCanAttackWith: _iCanAttackWith,
@@ -134,6 +142,7 @@ export default defineComponent({
       trumpSuit,
       round,
       // validation
+      gameIsEnd,
       iCanSayBeat,
       iCanTake,
       iCanRelease,
@@ -227,6 +236,23 @@ export default defineComponent({
     &:not(:last-child) {
       margin-right: 10px;
     }
+  }
+}
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  &-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 }
 </style>

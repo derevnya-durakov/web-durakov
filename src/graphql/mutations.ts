@@ -46,3 +46,12 @@ export const GRAPHQL_MUTATION_TAKE = gql`
   }
   ${GRAPHQL_FRAGMENT_GAME_STATE_ALL}
 `;
+
+export const GRAPHQL_MUTATION_NEXT_GAME = gql`
+  mutation nextGame($gameId: ID!) {
+    nextGame(gameId: $gameId) {
+      ...GameStateAll
+    }
+  }
+  ${GRAPHQL_FRAGMENT_GAME_STATE_ALL}
+`;

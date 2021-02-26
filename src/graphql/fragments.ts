@@ -57,6 +57,9 @@ export const GRAPHQL_FRAGMENT_GAME_STATE_ALL = gql`
       ...PlayerAll
     }
     isTaking
+    durak {
+      ...PlayerAll
+    }
   }
   ${GRAPHQL_FRAGMENT_CARD_ALL}
   ${GRAPHQL_FRAGMENT_PLAYER_ALL}

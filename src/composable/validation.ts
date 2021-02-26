@@ -19,15 +19,17 @@ export function useValidation(
 
     anyCardOnTable: computed(() => getters.anyCardOnTable as boolean),
 
+    gameIsEnd: computed(() => getters.gameIsEnd as boolean),
+
     iAmAttacker: computed(() => getters.iAmAttacker as boolean),
 
     iAmDefender: computed(() => getters.iAmDefender as boolean),
 
-    iCanSayBeat: computed(() => getters.iCanSayBeat as ComputedRef<boolean>),
+    iCanSayBeat: computed(() => getters.iCanSayBeat as boolean),
 
-    iCanRelease: computed(() => getters.iCanRelease as ComputedRef<boolean>),
+    iCanRelease: computed(() => getters.iCanRelease as boolean),
 
-    iCanTake: computed(() => getters.iCanTake as ComputedRef<boolean>),
+    iCanTake: computed(() => getters.iCanTake as boolean),
 
 
     // methods
