@@ -1,9 +1,11 @@
 <template>
   <div class="game-results">
+    <h1>GAME OVER!</h1>
+    <img src="/img/casino-case.jpg" width="300">
     <table>
       <tr v-for="player in donePlayers" :key="player.user.id">
         <td>{{playerIsDurak(player) ? 'Дурак' : player.done}}</td>
-        <td>-</td>
+        <td>------------------</td>
         <td>{{player.user.nickname}}</td>
       </tr>
     </table>

@@ -45,7 +45,7 @@
       </div>
     </div>
   </div>
-  <div v-if="gameIsEnd" class="overlay">
+  <div class="overlay">
     <div class="overlay-text">
       <game-results/>
     </div>
